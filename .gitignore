@@ -278,3 +278,6 @@ TSWLatexianTemp*
 
 #Mac
 .DS_Store
+
+#Exclude main compiled file
+CleanCode.pdf
