@@ -1,7 +1,7 @@
-\documentclass[14pt,t,usenames,dvipsnames]{beamer}
+\documentclass[14pt,usenames,dvipsnames]{beamer}
 \usepackage[english]{babel}
 \usepackage[misc]{ifsym}
-\usepackage{fontspec,mathabx,multicol,listings,comment}
+\usepackage{fontspec,mathabx,multicol,listings,comment,fontawesome,pgfornament}
 \usepackage{TeXnicalities}
 \usetikzlibrary{shapes}
 
@@ -40,7 +40,6 @@
     {\lstset{style=MyCpp, belowskip=-7mm, aboveskip=0pt,#1}}
     {}
 
-
 \makeatletter
 \patchcmd{\beamer@sectionintoc}
   {\vfill}
@@ -61,7 +60,7 @@
 \subtitle{Good practices in general coding}
 \author{Alessandro Sciarra}
 \institute{Z02~--~Software Development Center}
-\date{03.06.2019}
+\date{23.02.2023}
 \titlegraphic{\includegraphics[width=25mm]{LogoCRC}}
 \titlepagelogo{\includegraphics[width=25mm]{LogoGoethe}}
 %===============================================================%
@@ -76,59 +75,36 @@
 \begin{document}
 
 %===================================================================================================%
-\begin{frame}[plain,noframenumbering]{Prelude}
-    \begin{onlyenv}<1>
-        \begin{equation*}
-            \text{The slides will be available on the web}\,
-            \left\{
-            \begin{aligned}
-                 &\text{\URL[PP]{https://rmp.physik.uni-bielefeld.de/projects/z02/wiki}{CRC-Redmine}} \\
-                 &\text{\URL[PB]{https://th.physik.uni-frankfurt.de/~strongmatter/\#Seminars}{CRC-TR211}} \\
-                 %&\text{} \\
-            \end{aligned}
-            \right.
-        \end{equation*}
-        \vspace{-3mm}
-        \begin{varblock}{block example}[0.8\textwidth]{Leave us a feedback}
-            \hspace*{1mm} Was the talk clear, useful, inspiring?\\
-            \hspace*{1mm} Would you like to hear more on this/other topic? Which?\\
-            \hspace*{1mm} Any general comment? $\quad$
-            \tc{PP}{\href{mailto:sciarra@th.physik.uni-frankfurt.de}{{\small\Letter}$\;$Alessandro}}$\quad$
-            \tc{PB}{\href{mailto:staudenmaier@fias.uni-frankfurt.de}{{\small\Letter}$\;$Jan}}
-        \end{varblock}
-        \vspace{1mm}
-        \PrepareURLsymbol[PT]
-        \begin{varblock}{block alerted}[0.9\textwidth]{30.07.2018}
-            Review of past talk given in the \URL*{https://th.physik.uni-frankfurt.de/~sciarra/C++\_User\_Group/calendar2018.html}{C++ User Group Meeting}
-        \end{varblock}
-    \end{onlyenv}
-    \begin{onlyenv}<2>
-        \vspace{-2mm}
-        \begin{varblock}{block example}[0.92\textwidth]{Feedback from last time}
-            {
-                \itshape
-                \guillemotleft{}It was a very good overview of what one should keep in mind\guillemotright. \\
-                \guillemotleft{}Next time choose one topic and go more in depth\guillemotright. \\
-                \guillemotleft{}\PS{More about testing} with concrete examples\guillemotright. \\
-                \guillemotleft{}Less examples, more about general ideas\guillemotright. \\
-                \guillemotleft{}Do not be discourage by lack of questions\guillemotright. \\[1ex]
-            }
-            \ldots{}and many other technical observations.
-        \end{varblock}
-        \begin{varblock}{block alerted}[0.9\textwidth]{Disclaimer}
-            Slides are quite full of text for later reading. \\
-            It is about common sense, exceptions might exist. Let us discuss!
-        \end{varblock}
-    \end{onlyenv}
-\end{frame}
-%===================================================================================================%
-
-%===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}[plain,noframenumbering]{Outline}
+\begin{frame}[plain,noframenumbering]{Prelude}
+    \begin{equation*}
+        \text{The slides will be available on the web}\,
+        \left\{
+        \begin{aligned}
+            &\text{\URL[PB]{https://th.physik.uni-frankfurt.de/~strongmatter/\#Seminars}{CRC-TR211}} \\
+            &\text{\URL[PP]{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}} \\
+        \end{aligned}
+        \right.
+    \end{equation*}
+    \vspace{-3mm}
+    \begin{varblock}{block example}[0.8\textwidth]{Leave me a feedback}
+        Was the talk clear, useful, inspiring?\\
+        Would you like to hear more on this/other topic? Which?\\
+        Any general comment? $\quad$
+        \tc{PP}{\href{mailto:sciarra@th.physik.uni-frankfurt.de}{{\small\Letter}$\;$Alessandro}}
+    \end{varblock}
+    \vspace{1mm}
+    \PrepareURLsymbol[PT]
+    \begin{varblock}{block alerted}[0.9\textwidth]{Disclaimer}
+        Slides are quite full of text for later reading. \\
+        It is about common sense, exceptions might exist. Let us discuss!
+    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}[t,plain,noframenumbering]{Outline}
     \hspace*{1cm}
     \begin{minipage}[c][0.65\textheight]{\textwidth}
         \begin{columns}[t]
@@ -195,41 +171,85 @@
 \section{What are we aiming to?}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{}
-    \begin{quoteblock}{Clean code}[M.~Feathers]
-        Clean code always looks like it was written by someone who cares.
-        There is nothing obvious that you can do to make it better.
-        $[\ldots]$ if you try to imagine improvements, you're led back to where you are $[\ldots]$
-    \end{quoteblock}
-    \begin{itemize}
-        \setlength{\itemindent}{6mm}
-        \item \alert{Readable}
-        \item \PQ{Maintainable}
-        \item Easy to extend\tikzmark{itemCenter}
-        \item Easy to use
-        \item Hard to break
-        \item \alert{Testable/Tested}
-        \item \ldots
-    \end{itemize}
-    \begin{tikzpicture}[remember picture, overlay]
-        \node[right = 2cm of itemCenter] (fig) {\includegraphics[height=35mm]{CleanCode.jpg}};
-        \PrepareURLsymbol[PP]
-        \node[below = 1mm of fig, font=\scriptsize, xshift=-2pt] {\URL*{http://clean-code-developer.com/}{The Clean Code developer road}};
-        \node[below = 6mm of fig, font=\tiny] (progress) {
-            %\href{http://clean-code-developer.com/grades/grade-0-black/}{Black} $\,\to\,$
-            \PrepareURLsymbol[PQ]
-            \URL*{http://clean-code-developer.com/grades/grade-1-red/}{Red} $\,\to\,$
-            \PrepareURLsymbol[PT]
-            \URL*{http://clean-code-developer.com/grades/grade-2-orange/}{Orange} $\,\to\,$
-            \PrepareURLsymbol[Goldenrod]
-            \URL*{http://clean-code-developer.com/grades/grade-3-yellow/}{Yellow} $\,\to\,$
-            \PrepareURLsymbol[PS]
-            \URL*{http://clean-code-developer.com/grades/grade-4-green/}{Green} $\,\to\,$
-            \PrepareURLsymbol[PB]
-            \URL*{http://clean-code-developer.com/grades/grade-5-blue/}{Blue} $\,\to\,$
-            \PrepareURLsymbol[white]
-            \colorbox{PP}{\URL*{http://clean-code-developer.com/grades/grade-6-white/}{White}}
+    \begin{overlayarea}{\textwidth}{\textheight}
+        \begin{varblock*}{quote}[0.85\textwidth]{Clean code}[M.~Feathers]
+            Clean code always looks like it was written by someone who cares.
+            There is nothing obvious that you can do to make it better.
+            [$\ldots$] if you try to imagine improvements, you're led back to where you are.
+        \end{varblock*}
+        \begin{onlyenv}<1>
+            \begin{varblock*}{quote}[0.85\textwidth]{}[Bjarne Stroustrup]
+                I like my code to be elegant and efficient [$\ldots$] clean code does one thing well.
+            \end{varblock*}
+            \begin{varblock*}{quote}[0.85\textwidth]{}[Grady Booch]
+                Clean code is simple and direct. [$\ldots$] Clean code reads like well-written prose.
+            \end{varblock*}
+            \begin{varblock*}{quote}[0.85\textwidth]{}[Ward Cunningham]
+                You know you are working on clean code when each routine you read turns out to be pretty much what you expected.
+            \end{varblock*}
+        \end{onlyenv}
+        \FrameRemark<1>{Inventor of the SOLID principle, of the C++ language, of the Booch method and of the Wiki, respectively.}
+        \begin{onlyenv}<2>
+            \vspace{3mm}
+            \begin{itemize}
+                \setlength{\itemindent}{6mm}
+                \item \alert{Readable}
+                \item \PQ{Maintainable}
+                \item Easy to extend\tikzmark{itemCenter}
+                \item Easy to use
+                \item Hard to break
+                \item \alert{Testable/Tested}
+                \item \ldots
+            \end{itemize}
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[right = 2cm of itemCenter] (fig) {\includegraphics[height=35mm]{CleanCode.jpg}};
+                \PrepareURLsymbol[PP]
+                \node[below = 1mm of fig, font=\scriptsize, xshift=-2pt]
+                     {\URL*{http://clean-code-developer.com/}{The Clean Code developer road}};
+                \node[below = 6mm of fig, font=\tiny] (progress) {
+                    %\href{http://clean-code-developer.com/grades/grade-0-black/}{Black} $\,\to\,$
+                    \PrepareURLsymbol[PQ]
+                    \URL*{http://clean-code-developer.com/grades/grade-1-red/}{Red} $\,\to\,$
+                    \PrepareURLsymbol[PT]
+                    \URL*{http://clean-code-developer.com/grades/grade-2-orange/}{Orange} $\,\to\,$
+                    \PrepareURLsymbol[Goldenrod]
+                    \URL*{http://clean-code-developer.com/grades/grade-3-yellow/}{Yellow} $\,\to\,$
+                    \PrepareURLsymbol[PS]
+                    \URL*{http://clean-code-developer.com/grades/grade-4-green/}{Green} $\,\to\,$
+                    \PrepareURLsymbol[PB]
+                    \URL*{http://clean-code-developer.com/grades/grade-5-blue/}{Blue} $\,\to\,$
+                    \PrepareURLsymbol[white]
+                    \colorbox{PP}{\URL*{http://clean-code-developer.com/grades/grade-6-white/}{White}}
+                };
+                \path[to] (progress.359) edge[out=350, in=190, looseness=1.2] (progress.181);
+            \end{tikzpicture}
+        \end{onlyenv}
+    \end{overlayarea}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{We will develop the needed code sense!}
+    \begin{tikzpicture}[remember picture, overlay,
+                        every node/.style={inner sep=0pt}, pgfornamentstyle/.style={color=PB}]
+        \def\ornsize{11mm}
+        \node[font=\large](Text) at ($(current page.north)!0.52!(current page.south)$) {%
+            \begin{tabular}{c}
+                A gut feeling is like a drill, a simple instrument\\
+                whose force lies in the quality of its material.\\[1mm]
+                {\normalsize---~Gerd Gigerenzer~---}
+            \end{tabular}
         };
-        \path[to] (progress.359) edge[out=350, in=190, looseness=1.2] (progress.181);
+        \node[shift={(-12mm,6mm)},anchor=north west] (CNW)
+            at (Text.north west) {\pgfornament[width=\ornsize]{61}};
+        \node[shift={(12mm,6mm)},anchor=north east] (CNE)
+            at (Text.north east) {\pgfornament[width=\ornsize,symmetry=v]{61}};
+        \node[shift={(-12mm,-5mm)},anchor=south west] (CSW)
+            at (Text.south west) {\pgfornament[width=\ornsize,symmetry=h]{61}};
+        \node[shift={(12mm,-5mm)},anchor=south east] (CSE)
+            at (Text.south east) {\pgfornament[width=\ornsize,symmetry=c]{61}};
+        \pgfornamentline{CNW.north east}{CNE.north west}{3}{88}
+        \pgfornamentline{CSW.south east}{CSE.south west}{3}{88}
+        \pgfornamentline{CNW.south west}{CSW.north west}{2}{88}
+        \pgfornamentline{CNE.south east}{CSE.north east}{2}{88}
     \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -268,18 +288,18 @@
                         \node[thick, ellipse, Shape={PT}{PT!20}{PT}, text width=18mm, align=center, below = of O] (C) {Harder to add new features};
                         \path[to] (B) edge[out=0, in=0, looseness=1.26] (C) (C) edge[out=180, in=270] (A);
                     \end{scope}
-                    %\begin{scope}[scope on=<5>]
-                    %    \node[starburst, starburst point height=15mm, minimum width=7cm, minimum height=5cm, Shape={red}{yellow!50}{red}, line width=1.5pt, font=\Huge\ttfamily, rotate=10] at (O) {BOOM};
-                    %\end{scope}
                     \begin{scope}[scope on=<5>]
-                       \node (VC) at ([yshift=-3mm]O) {\includegraphics[height=0.6\textheight]{VisualizedCodebase}};
-                       %\fill[white, visible on=<5>] ($(VC.south west)!0.76!(VC.south)+(0,3.8mm)$) rectangle ($(VC.north east)!0.21!(VC.east)-(2mm,0)$);
+                        \node[starburst, starburst point height=15mm, minimum width=7cm, minimum height=5cm,
+                              Shape={red}{yellow!50}{red}, line width=1.5pt, font=\Huge\ttfamily, rotate=10]
+                                 at (O) {BOOM};
                     \end{scope}
-                    \begin{scope}[scope on=<6->]
+                    \begin{scope}[scope on=<6>]
+                       \node (VC) at ([yshift=-3mm]O) {\includegraphics[height=0.6\textheight]{VisualizedCodebase}};
+                    \end{scope}
+                    \begin{scope}[scope on=<7>]
                         \node[thick, ellipse, Shape={PS}{PS!20}{PS}, text width=18mm, align=center, right = of O] (D) {Pay back technical debt};
                         \path[to] (B) edge[out=0, in=102] (D.86) (D.274) edge[out=265, in=270, looseness=0.6] (A);
-                        \node[hexagon={red}{yellow!20}{red}, font=\small] (note) at ([yshift=-6mm]C) {Technical debt naturally tends to increase};
-                        %\node[below = -1pt of note, font=\itshape\tiny, text=PB] {(in codebases which make use of external libraries)};
+                        \node[hexagon={red}{yellow!20}{red}, font=\small] (note) at ([yshift=-8mm]C) {Technical debt naturally tends to increase};
                     \end{scope}
                 \end{tikzpicture}
             \end{center}
@@ -287,20 +307,20 @@
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}{The connection to physics}{As physicist, why should I care of having high quality code?}
-    \vspace{-3mm}
+\begin{frame}{As physicist, why having high quality code?}
+    \vspace{-1mm}
     \begin{itemize}
         \item It is plenty of problems which need to be approached numerically\\
               $\quad\to\;$ Programming is one of the major tasks in physics!
         \item Reproducibility should be a pillar of science\\
               $\quad\to\;$ One of the main responsibilities of a scientist!
         \item Lots of bad code around and passed on across generations\\
-              $\quad\to\;$ A \PP{huge amount of time} is wasted, \PP{subtracted to research!}
+              $\quad\to\;$ \PB{A huge amount of time is wasted, subtracted to research!}
     \end{itemize}
-    \vspace{-2mm}
-    \begin{varblock}{}{It should not happen\ldots}
+    \vspace{-1mm}
+    \begin{varblock}{alert}{It should not happen\ldots}
         \guillemotleft{}Wow! There is definitely \alert{a new physics signal} in these data!\guillemotright\\
-        {\color{PP}\scriptsize\ldots{}few days/weeks/months/years later\ldots}\\[0.5ex]
+        {\color{PB}\scriptsize\ldots{}few days/weeks/months/years later\ldots}\\[0.5ex]
         \guillemotleft{}Oh, no! It was \alert{just a bug} in the code!\guillemotright
     \end{varblock}
 \end{frame}
@@ -315,11 +335,11 @@
 \section{Meaningful names}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Use intention-revealing names}
-    \vspace{-4mm}
+    \vspace{-2mm}
     \begin{varblock}{block example}{\alt<1-2>{Why is it hard to tell what this code is doing?}{Good names are crucial for readability!}}
         \begin{onlyenv}<1-2>
-            \begin{Cpp}[gobble=16]
-                typedef std::vector< std::vector<int> > myVecVec;
+            \begin{Cpp}
+                using std::vector<std::vector<int>> = myVecVec;
 
                 myVecVec FC(const myVecVec& b)
                 {
@@ -333,8 +353,8 @@
             \end{Cpp}
         \end{onlyenv}
         \begin{onlyenv}<3>
-            \begin{Cpp}[gobble=16]
-                typedef std::vector< std::vector<int> > myVecVec;
+            \begin{Cpp}
+                using std::vector< std::vector<int> > = myVecVec;
 
                 myVecVec getFlaggedCells(const myVecVec& gameBoard)
                 {
@@ -348,8 +368,8 @@
             \end{Cpp}
         \end{onlyenv}
         \begin{onlyenv}<4>
-            \begin{Cpp}[gobble=16]
-                //typedef std::vector< std::vector<int> > myVecVec;
+            \begin{Cpp}
+                using std::vector<std::vector<int>> = SetOfCells;
 
                 SetOfCells getFlaggedCells(const SetOfCells& gameBoard)
                 {
@@ -366,6 +386,7 @@
     \end{varblock}
     \begin{uncoverenv}<2->
         \begin{itemize}
+            \setlength{\itemsep}{0mm}
             \item What kind of object is contained in \alt<2>{\CPP|list|}{\CPP|flaggedCells|}?
             \item What does \alt<2>{\PB{0}}{\CPP|STATUS_VALUE|} represent in the \CPP|if|-clause?
             \item What does \alt<2>{\PB{4}}{\CPP|FLAGGED|} mean in the \CPP|if|-clause?
@@ -375,30 +396,29 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Use names which can be searched}
-    \vspace{-9mm}
+    \vspace{-2mm}
     \begin{overlayarea}{\textwidth}{\textheight}
-        \begin{varblock}{}{Rule of thumb}
+        \begin{varblock}{alert}{Rule of thumb}
             The length of a name should correspond to the size of its scope
         \end{varblock}
-        \vspace{-3mm}
+        \vspace{-1mm}
         \begin{itemize}
-            \item Single-letter names \alert{only} for local variables inside \alert{short scopes}
+            \item Single-letter names \textbf{only} for local variables inside \textbf{short scopes}
             \item IDE very good at renaming variables $\;\Rightarrow\;$ rename, rename, rename!
         \end{itemize}
-        \vspace{-3mm}
         \begin{varblock}{block example}{Something like this\ldots}<only@2>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 for(int j = 0; j < 34; j++)
                     s += t[j]*4/5;
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[\textwidth]{\ldots{}or something like this?}<only@3>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 const int realDaysPerIdealWeek = 4;
                 int totalRealWeeksNeeded = 0;
                 for(int j = 0; j < NUMBER_OF_TASKS; j++)
                 {
-                    int realDaysPerTask   = taskDaysEstimate.at(j) *
+                    int realDaysPerTask   = taskDaysEstimate[j] *
                                             realDaysPerIdealWeek;
                     int realWeeksPerTask  = realDaysPerTask/WORKING_DAYS_PER_WEEK;
                     totalRealWeeksNeeded += realWeeksPerTask;
@@ -420,12 +440,10 @@
         \item \ldots
     \end{itemize}
     \vspace{-3mm}
-    \begin{varblock}{}[0.5\textwidth]{Take home lesson}
-        \alert{Choose carefully} every name!
-    \end{varblock}
-    \vspace{-2mm}
-    \begin{varblock}{}[0.5\textwidth]{}
-        \alert{Rename} when you find better ones!
+    \begin{varblock}{alert}[0.5\textwidth]{Take home lesson}
+        \textbf{Choose carefully every name!}\\[1mm]
+        $\downarrow$\\[1mm]
+        Rename when you find better ones!
     \end{varblock}
 \end{frame}
 %===================================================================================================%
@@ -435,25 +453,51 @@
 \section{Comments and Formatting}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Do not comment bad code, rewrite it}
-    \vspace{-3mm}
-    \begin{quoteblock}{Avoid comments!}[R. C. Martin]
-        The proper use of comments is to compensate for our failure to express ourself in code.
-        Note that I used the word \alert{failure}. I meant it. Comments are always failures. [\ldots]
-        Why am I so down on comments? Because they lie. Not always, and not intentionally, but too often.
-        The older a comment is, and the farther away it is from the code it describes, the more likely
-        it is to be just plain wrong.
-    \end{quoteblock}
-    \begin{itemize}
-        \item To keep comments up-to-date costs energy and this energy should rather go into make the code clearer and more expressive!
-        \item Inaccurate comments are far worse than no comments!
-        \item Truth can only be found in one place: the code.
-    \end{itemize}
+    \begin{onlyenv}<1>
+        \begin{tikzpicture}[remember picture, overlay,
+                            every node/.style={inner sep=0pt}, pgfornamentstyle/.style={color=ALERT}]
+            \def\ornsize{11mm}
+            \node[font=\large](Text) at ($(current page.north)!0.52!(current page.south)$) {%
+                \begin{tabular}{c}
+                    Comments are an \textbf{unfortunate necessity},\\
+                    NOT a great achievement!\\[3mm]
+                    {\normalsize---~Robert C. Martin~---}
+                \end{tabular}
+            };
+            \node[shift={(-12mm,6mm)},anchor=north west] (CNW)
+            at (Text.north west) {\pgfornament[width=\ornsize]{61}};
+            \node[shift={(12mm,6mm)},anchor=north east] (CNE)
+            at (Text.north east) {\pgfornament[width=\ornsize,symmetry=v]{61}};
+            \node[shift={(-12mm,-5mm)},anchor=south west] (CSW)
+            at (Text.south west) {\pgfornament[width=\ornsize,symmetry=h]{61}};
+            \node[shift={(12mm,-5mm)},anchor=south east] (CSE)
+            at (Text.south east) {\pgfornament[width=\ornsize,symmetry=c]{61}};
+            \pgfornamentline{CNW.north east}{CNE.north west}{3}{88}
+            \pgfornamentline{CSW.south east}{CSE.south west}{3}{88}
+            \pgfornamentline{CNW.south west}{CSW.north west}{2}{88}
+            \pgfornamentline{CNE.south east}{CSE.north east}{2}{88}
+        \end{tikzpicture}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{quoteblock}{Avoid comments!}[R. C. Martin]
+            The proper use of comments is to compensate for our failure to express ourself in code.
+            Note that I used the word \alert{failure}. I meant it. Comments are always failures. [\ldots]
+            Why am I so down on comments? Because they lie. Not always, and not intentionally, but too often.
+            The older a comment is, and the farther away it is from the code it describes, the more likely
+            it is to be just plain wrong.
+        \end{quoteblock}
+        \begin{itemize}
+            \item To keep comments up-to-date costs energy and this energy should rather go into make the code clearer and more expressive!
+            \item Inaccurate comments are far worse than no comments!
+            \item \alert{Truth can only be found in one place: the code.}
+        \end{itemize}
+    \end{onlyenv}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Explain yourself in the code}
     \vspace{-5mm}
     \begin{varblock}{block example}[0.85\textwidth]{What you should strive to avoid\ldots}
-        \begin{Cpp}[gobble=12]
+        \begin{Cpp}
             Person e; // The employee we are considering
 
             // Check if the employee is eligible for full benefits
@@ -461,7 +505,7 @@
         \end{Cpp}
     \end{varblock}
     \begin{varblock}{block example}[0.8\textwidth]{\ldots{}in favour of expressive code}<2->
-        \begin{Cpp}[gobble=12]
+        \begin{Cpp}
             Person employee;
 
             if(employee.isEligibleForFullBenefits())
@@ -476,47 +520,47 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Good comments}{But try to limit them as much as possible!}
-    \vspace{-1mm}
-    \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{overlayarea}{\textwidth}{0.75\textheight}
         \begin{onlyenv}<4->
+            \vspace{3mm}
             \begin{itemize}
                 \item Informative comment
                 \item Explanation of intent, Clarification
-                \only<5->{\item Amplification}
-                \only<6->{\item \PQ{TODO comments}{$\;$\scriptsize $\to\;$border line: really needed in a code? Take time to go through them!}}
-                \only<6->{\item \PQ{Legal comments}{$\;$\scriptsize $\to\;$border line: not legally required \& overlap with version control.}}
+                \item<only@5-> Amplification
+                \item<only@6-> \PQ{TODO comments}{$\;$\scriptsize $\to\;$border line: really needed in a code? Take time to go through them!\tikzmark{todoEnd}}
+                \item<only@6-> \PQ{Legal comments}{$\;$\scriptsize $\to\;$border line: not legally required \& overlap with version control.}
             \end{itemize}
             \begin{onlyenv}<6->
                 \begin{tikzpicture}[remember picture, overlay]
                     \node[anchor=north east] (TD) at ($(current page.north east)-(7mm,3mm)$) {\includegraphics[scale=0.07]{Todo}};
-                    \path[thin, to] ($(TD.south)!0.5!(TD.south east)$) edge[out=270, in=0] ++(-6.5mm,-4.8mm);
+                    \path[thin, to] ($(TD.south)!0.5!(TD.south east)$) edge[out=270, in=0] (todoEnd);
                 \end{tikzpicture}
             \end{onlyenv}
         \end{onlyenv}
         \begin{onlyenv}<1-3>
-            \vspace{-5mm}
+            \vspace{-1mm}
             \begin{varblock}{block example}[0.98\textwidth]{Informative comment}
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     // Format matched:     hh:mm:ss dd Month yyyy
                     std::regex timePattern("(\\d{2}:){2}\\d{2}, \\d{2} \\S+ \\d{4}");
                 \end{Cpp}
             \end{varblock}
             \begin{varblock}{block example}[0.77\textwidth]{Explanation of intent}<uncover@2->
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     // Checking the residuum possibly not every
                     // iteration allows for speed up on GPUs
                     if(iterationNumber % CG_CHECK_RESIDUUM_EVERY == 0)
                 \end{Cpp}
             \end{varblock}
             \begin{varblock}{block example}[0.77\textwidth]{Clarification when using cryptic external API}<uncover@3>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     // Check if root was found up to desired precision
                     if(gsl_fcmp(functionValue, 0.0, epsilon) == 0)
                 \end{Cpp}
             \end{varblock}
         \end{onlyenv}
         \begin{varblock}{block example}[0.99\textwidth]{Amplification}<only@4>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 // See https://stackoverflow.com/a/1736040 for more information.
                 template<typename T>
                 std::string getDefaultForHelper(const T& number)
@@ -524,7 +568,7 @@
         \end{varblock}
         \vspace{-1mm}
         \begin{varblock}{block example}[0.99\textwidth]{}<only@4>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 // Removing trailing spaces is crucial since any would break the
                 // following algorithm. It might leave the string unchanged, but
                 // the absence of trailing spaces is at the moment not guaranteed!
@@ -533,17 +577,17 @@
         \end{varblock}
         \begin{onlyenv}<5>
             \begin{varblock}{block example}[0.98\textwidth]{TODO comments}
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     // TODO: The following two classes should be merged into one!
                 \end{Cpp}
             \end{varblock}
             \vspace{-2mm}
             \begin{varblock}{block example}[0.7\textwidth]{Legal comments}
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     /*******************************************
                      *  Copyright (c) 2018 Alessandro Sciarra  *
                      *                                         *
-                     *  This file is part of CL2QCD.           *
+                     *  This file is part of BaHaMAS.          *
                      *******************************************/
                 \end{Cpp}
             \end{varblock}
@@ -557,12 +601,11 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Bad comments}
-    \vspace{-5mm}
     \begin{overlayarea}{\textwidth}{\textheight}
         \begin{onlyenv}<1>
-            \vspace{-4mm}
+            \vspace{-3mm}
             \begin{varblock}{block example}[0.94\textwidth]{Several bad habits in one example}<only@1>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     /**
                       * @param longTitle The complete title of the CD
                       * @param longAuthor The complete author of the CD
@@ -586,9 +629,9 @@
                 \end{Cpp}
             \end{varblock}
         \end{onlyenv}
-        \begin{overlayarea}{\textwidth}{0.7\textheight}
-            \begin{varblock}{block example}[0.7\textwidth]{The same code cleaned up}<only@2>
-                \begin{Cpp}[gobble=20]
+        \begin{onlyenv}<2>
+            \begin{varblock}{block example}[0.7\textwidth]{The same code cleaned up}
+                \begin{Cpp}
                     void Jukebox::addCD(std::string longTitle,
                                         std::string longAuthor,
                                         int durationInMinutes)
@@ -603,40 +646,72 @@
                     }
                 \end{Cpp}
             \end{varblock}
-            \begin{onlyenv}<3>
-                \begin{itemize}
-                    \item Redundant comments               \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
-                    \item Noise comments                   \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
-                    \item Misleading comments              \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
-                    \item Comments instead of a good name  \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Use good name}}
-                    \item Closing brace comments           \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Rarely}}
-                    \item Attribution comments             \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Delete, use version control}}
-                    \item Commented-out code               \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Delete, use version control}}
-                    \item Unclear, cryptic comments        \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Remove or clarify}}
-                \end{itemize}
-            \end{onlyenv}
-        \end{overlayarea}
-            \begin{varblock}{}[0.8\textwidth]{}<2->
-                Have \PB{good reasons} (are they!?) before adding a comment!
+            \vspace{-2mm}
+            \begin{varblock}{block example}[0.7\textwidth]{}
+                The code becomes smaller and it reads well!\\
+                Why should you add a comment here?!
             \end{varblock}
+        \end{onlyenv}
+        \begin{onlyenv}<3>
+            \vspace{3mm}
+            \begin{itemize}
+                \item Redundant comments               \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
+                \item Noise comments                   \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
+                \item Misleading comments              \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Avoid}}
+                \item Comments instead of a good name  \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\PS{Use good name}}
+                \item Closing brace comments           \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\PB{Rarely}}
+                \item Attribution comments             \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Delete, use version control}}
+                \item Commented-out code               \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Delete, use version control}}
+                \item Unclear, cryptic comments        \hfill\makebox[55mm][l]{\PP{$\;\to\;$}\alert{Remove or clarify}}
+            \end{itemize}
+            \begin{center}
+                \large
+                Have \textbf{\tikzmark{GR1}good reasons\tikzmark{GR2}} before adding a comment!
+            \end{center}
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[anchor=north, font=\footnotesize, text=ALERT] at ($(GR1)!0.5!(GR2)-(0,2mm)$) {Are they?};
+            \end{tikzpicture}
+        \end{onlyenv}
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Formatting}{Yes, formatting is important!}
-    \vspace{-3mm}
-    \begin{itemize}
-        \item How big should be a file? \\ $\to\;$ Try to stay \PP{below few hundreds}, the reader will be grateful!
-        \item Give some vertical breath to your code
-        \item Care about length of lines (\PP{80} to \alert{140} characters) \\
-              $\to\;$ Crucial if the code is readable from browser (e.g. \PP{GitHub})
-        \item Consider horizontal alignment and spacing (e.g. \PP{around operators})
-        \item Be coherent (e.g. \PP{braces})
-        \item How to work when different people write in the same code base?
-    \end{itemize}
-    \vspace{-2mm}
-    \begin{varblock}{block alerted}[0.6\textwidth]{E.g. clang-format}
-        Agree on a style and \alert{use a tool} to enforce it
-    \end{varblock}
+    \begin{onlyenv}<1-4>
+        \begin{varblock}{alert}[0.6\textwidth]{The 3 most important rules:}
+            \begin{enumerate}[<+(1)->]
+                \item Stay coherent with what you find
+                \item Stay coherent with what you find
+                \item Stay coherent with what you find
+            \end{enumerate}
+        \end{varblock}
+        \vspace{-2mm}
+        \begin{varblock}{alert}[0.7\textwidth]{}<uncover@4>
+            \textbf{This starts with but it is not limited to formatting!}
+        \end{varblock}
+        \vspace{-2mm}
+        \begin{varblock}{alert}[0.85\textwidth]{}<uncover@4>
+            Especially important when working on an existing codebase!
+        \end{varblock}
+    \end{onlyenv}
+    \begin{onlyenv}<5>
+        \begin{itemize}
+            \item How big should be a file? \\ $\to\;$ Try to stay \PP{below few hundreds}, the reader will be grateful!
+            \item Give some vertical breath to your code
+            \item Care about length of lines (\PP{80} to \alert{140} characters) \\
+                  $\to\;$ Crucial if the code is readable from browser (e.g. \PP{GitHub})
+            \item Consider horizontal alignment and spacing (e.g. \PP{around operators})
+            \item Be coherent (e.g. \PP{braces})
+            \item How to work when different people write in the same code base?
+        \end{itemize}
+        \begin{tikzpicture}[remember picture, overlay]
+            \node[anchor=north east, rounded corners=1mm, draw=ALERT, outer sep=6mm] at (current page.north east) {
+                \begin{tabular}{c}
+                    Agree on a style and \alert{use a tool}\\
+                    (e.g.\ clang-format) to enforce it
+                \end{tabular}
+            };
+        \end{tikzpicture}
+    \end{onlyenv}
 \end{frame}
 %===================================================================================================%
 
@@ -645,7 +720,6 @@
 \section{Functions and Classes}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Common general aspects}
-    \vspace{-8mm}
     \begin{overlayarea}{\textwidth}{\textheight}
         \begin{varblock}{block alerted}[0.5\textwidth]{SMALL}
             Do \alert{one} thing. Do it \alert{well}. Do it \alert{only}!
@@ -657,7 +731,7 @@
         \end{itemize}
         \vspace{-2mm}
         \begin{varblock}{block example}[0.51\textwidth]{Single-responsibility class}<only@2>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 class Version {
                   public:
                     int getMajorVersionNumber();
@@ -667,7 +741,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.71\textwidth]{Single-level-of-abstraction function}<only@3>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 void MakeCoffee(const Coffee& typeOfCoffee){
                     WarmUpMachineIfNeeded(typeOfCoffee);
                     GrindCoffee(typeOfCoffee);
@@ -679,10 +753,14 @@
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{More about this one-thing idea}
+
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Limit the number of arguments}{Make useful abstractions whenever it helps}
     \vspace{-3mm}
     \begin{varblock}{block example}[\textwidth]{When you call the function, which argument is what?}
-        \begin{Cpp}[gobble=12]
+        \begin{Cpp}
             double Distance(double, double, double, double);
             double Distance(double, double, double, double, double, double);
         \end{Cpp}
@@ -696,7 +774,7 @@
     \end{tikzpicture}
     \vspace{-1mm}
     \begin{varblock}{block example}[0.72\textwidth]{Isn't this much better?}<uncover@2>
-        \begin{Cpp}[gobble=12]
+        \begin{Cpp}
             struct Point2D {      |    struct Point3D {
                 double x, y;      |        double x, y, z;
             };                    |    };
@@ -718,7 +796,7 @@
         \end{varblock}
         \vspace{-1mm}
         \begin{varblock}{block example}[0.78\textwidth]{Operation}<only@1>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 bool isPrime(unsigned int number)
                 {
                     if(number == 1) return false;
@@ -731,7 +809,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.62\textwidth]{Integration}<only@2>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 int main(int argc, char *argv[])
                 {
                     WelcomeUserToTheGame();
@@ -864,7 +942,7 @@
         \end{onlyenv}
         \vspace{-2.5mm}
         \begin{varblock}{block example}[0.8\textwidth]{Boost unit test framework}<only@2>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 #define BOOST_TEST_MODULE Factorial
                 #include |+<boost/test/included/unit_test.hpp>+|
                 #include |+"factorial.hpp"+|
@@ -882,7 +960,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest\vphantom{p}}}<only@3>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
@@ -890,7 +968,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=short}}<only@4>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
@@ -903,7 +981,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=detailed}}<only@5>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
@@ -965,7 +1043,7 @@
         \end{itemize}
         \begin{varblock}{block example}[11cm]{Trivial example}<only@2-3>
             \begin{onlyenv}<2>
-                \begin{Cpp}[gobble=18]
+                \begin{Cpp}
                     double sum1=0;
                     for(const auto& data : dataSet1)
                         sum1 += data;
@@ -979,7 +1057,7 @@
                 \end{Cpp}
             \end{onlyenv}
             \begin{onlyenv}<3>
-                \begin{Cpp}[gobble=18]
+                \begin{Cpp}
                     double calculateAverage(const std::vector<double>& dataSet)
                     {
                         double sum=0;
@@ -994,7 +1072,7 @@
             \end{onlyenv}
         \end{varblock}
         \begin{varblock}{block example}[0.98\textwidth]{Less trivial example}<4->
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 double calculateAverage(const std::vector<double>& dataSet)
                 {
                    std::cout << "Function \"calculateAverage\" missing!\n";
@@ -1002,7 +1080,7 @@
                 }
              \end{Cpp}
             \begin{uncoverenv}<5>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     double calculateAverage(const std::vector<double>& dataSet)
                     {
                        std::cout << "Function \"" << __FUNCTION__ << "\" missing!\n";
@@ -1032,7 +1110,7 @@
         \vspace{-5mm}
         \begin{varblock}{block example}[0.86\textwidth]{Simple example}<only@2-4>
             \begin{onlyenv}<2>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     std::vector<int> data = {1, -3, 2 8, 4, -9};
 
                     auto first = data.begin(), last = data.end();
@@ -1046,7 +1124,7 @@
                 \end{Cpp}
             \end{onlyenv}
             \begin{onlyenv}<3>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     std::vector<int> data = {1, -3, 2 8, 4, -9};
 
                     auto it = std::find(data.begin(), data.end(), 4);
@@ -1055,7 +1133,7 @@
                 \end{Cpp}
             \end{onlyenv}
             \begin{onlyenv}<4>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     std::vector<int> data = {1, -3, 2 8, 4, -9};
 
                     //Even better
@@ -1067,7 +1145,7 @@
         \begin{onlyenv}<4>
             \vspace{-1mm}
             \begin{varblock}{block example}[0.86\textwidth]{}
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     template<typename T>
                     bool isElementInVector(const std::vector<T>& data,
                                            const T& value)
@@ -1080,7 +1158,7 @@
         \end{onlyenv}
         \begin{varblock}{block example}[0.88\textwidth]{Example from real life (Quake III Arena, 1999)}<only@5-6>
             \begin{uncoverenv}<6>
-                \begin{Cpp}[gobble=20]
+                \begin{Cpp}
                     float Q_rsqrt(float number)
                     {
                         long i;  float x2, y;  const float threehalfs = 1.5F;
@@ -1100,7 +1178,7 @@
             \end{uncoverenv}
         \end{varblock}
         \begin{varblock}{block example}[0.78\textwidth]{Example from real life (Quake III Arena, 1999)}<only@7->
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 float Q_fastInverseSqrt(float number)
                 {
                     float approximateResult
@@ -1112,7 +1190,7 @@
         \vspace{-2mm}
         \begin{varblock}{block example}[0.9\textwidth]{}<only@8>
             \PrepareURLsymbol[red]
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 float calculateApproximateInverseSqrt(float number)
                 {
                     //Here some very low level operations are carried out.
@@ -1124,7 +1202,7 @@
             \end{Cpp}
         \end{varblock}
         \begin{varblock}{block example}[0.9\textwidth]{}<only@9>
-            \begin{Cpp}[gobble=16]
+            \begin{Cpp}
                 float refineResult(float result, float initialNumber)
                 {
                     //Here one iteration of the Newton's method is used.

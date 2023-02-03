@@ -1,4 +1,5 @@
 \usepackage{listings}
+\usepackage{lstautogobble}
 \def\transpPerc{100}
 %listings set
 \lstdefinestyle{MyCpp}{
@@ -24,7 +25,7 @@ stringstyle=\color{OliveGreen},     % string literal style
 tabsize=2,                          % sets default tabsize to 2 spaces
 title=\lstname,                     % show the filename of files included with \lstinputlisting; also try caption instead of title
 %
-%Base style for this presentation 
+%Base style for this presentation
 keepspaces=true,                    % keeps spaces in text, useful for keeping indentation of code
                                     % (possibly needs columns=flexible)
 keywordstyle=\color{Cyan},          % keyword style
@@ -56,7 +57,7 @@ emphstyle=[2]{\color{Orange}}, %Variables
 emph=[3]{if, else, while, do, for, case, switch},
 emphstyle=[3]{\color{violet}}, %Loops, if, etc.
 emph=[4]{const, auto, break, continue, default, static, return, struct, NULL, sizeof, typedef,
-         template, typename, true, false, throw, public, class},
+         template, typename, true, false, throw, public, class, using},
 emphstyle=[4]{\color{ProcessBlue}}, %Logical keywords
 emph=[5]{std, boost},
 emphstyle=[5]{\color{Maroon}}, %Namespaces
@@ -67,13 +68,15 @@ emph=[7]{age, flags, title, author, tracks, duration, cdList},
 emphstyle=[7]{\color{Peach!50!Purple}}, %Members
 emph=[8]{Factorial, SpecialCases, NormalCases},
 emphstyle=[8]{\color{Blue}}, %Boost cases and suite
+%Additional customizations
+autogobble=true, % lstautogobble needed!
 }
 
 
 \def\CPP{\lstinline[style=MyCpp, basicstyle=\ttfamily\color{black}]}
 
 \makeatletter
-\newenvironment{CenteredBox}{% 
+\newenvironment{CenteredBox}{%
 \begin{Sbox}}{% Save the content in a box
 \end{Sbox}\centerline{\parbox{\wd\@Sbox}{\TheSbox}}}% And output it centered
 \makeatother
