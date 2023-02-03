@@ -36,9 +36,6 @@
 
 %My commands
 \newcommand<>{\tc}[2]{\textcolor#3{#1}{#2}}
-\lstnewenvironment{Cpp}[1][]
-    {\lstset{style=MyCpp, belowskip=-7mm, aboveskip=0pt,#1}}
-    {}
 
 \makeatletter
 \patchcmd{\beamer@sectionintoc}
@@ -71,7 +68,6 @@
          \sectionpage
     \end{frame}
 }
-
 \begin{document}
 
 %===================================================================================================%
@@ -124,16 +120,18 @@
 \section{Summary \& Conclusion}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}<1>[label=THM]{Take home message}
-    \vspace{-4mm}
+    \vspace{-1mm}
     \begin{varblock}{block example}[70mm]{Clean code}
         What it is and why it is worth aiming at it
     \end{varblock}
+    \vspace{1mm}
     \begin{itemize}
         \item The importance of meaningful names, comments and formatting
         \item Strive to respect few very general rules (e.g. DRY, KISS, pathfinder)
         \item Functions and classes: small, Single Responsibility and IOSP!
         \item Test your code and keep your tests clean (F.I.R.S.T.)!
     \end{itemize}
+    \vspace{2mm}
     \begin{varblock}{}[0.94\textwidth]{}
         \PB{Have a reason for everything you type $\to$ refactor, refactor, refactor!}
     \end{varblock}
@@ -330,7 +328,6 @@
 \end{frame}
 %===================================================================================================%
 
-
 %===================================================================================================%
 \section{Meaningful names}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -338,7 +335,7 @@
     \vspace{-2mm}
     \begin{varblock}{block example}{\alt<1-2>{Why is it hard to tell what this code is doing?}{Good names are crucial for readability!}}
         \begin{onlyenv}<1-2>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 using std::vector<std::vector<int>> = myVecVec;
 
                 myVecVec FC(const myVecVec& b)
@@ -350,10 +347,10 @@
                     }
                     return list;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{onlyenv}
         \begin{onlyenv}<3>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 using std::vector< std::vector<int> > = myVecVec;
 
                 myVecVec getFlaggedCells(const myVecVec& gameBoard)
@@ -365,10 +362,10 @@
                     }
                     return flaggedCells;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{onlyenv}
         \begin{onlyenv}<4>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 using std::vector<std::vector<int>> = SetOfCells;
 
                 SetOfCells getFlaggedCells(const SetOfCells& gameBoard)
@@ -380,7 +377,7 @@
                     }
                     return flaggedCells;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{onlyenv}
 
     \end{varblock}
@@ -407,13 +404,13 @@
             \item IDE very good at renaming variables $\;\Rightarrow\;$ rename, rename, rename!
         \end{itemize}
         \begin{varblock}{block example}{Something like this\ldots}<only@2>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 for(int j = 0; j < 34; j++)
                     s += t[j]*4/5;
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[\textwidth]{\ldots{}or something like this?}<only@3>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 const int realDaysPerIdealWeek = 4;
                 int totalRealWeeksNeeded = 0;
                 for(int j = 0; j < NUMBER_OF_TASKS; j++)
@@ -423,7 +420,7 @@
                     int realWeeksPerTask  = realDaysPerTask/WORKING_DAYS_PER_WEEK;
                     totalRealWeeksNeeded += realWeeksPerTask;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
 \end{frame}
@@ -497,19 +494,19 @@
 \begin{frame}[fragile]{Explain yourself in the code}
     \vspace{-5mm}
     \begin{varblock}{block example}[0.85\textwidth]{What you should strive to avoid\ldots}
-        \begin{Cpp}
+        \begin{lstlisting}[style=MyCpp]
             Person e; // The employee we are considering
 
             // Check if the employee is eligible for full benefits
             if( (e.flags & HOURLY_FLAG) && e.age > 65 )
-        \end{Cpp}
+        \end{lstlisting}
     \end{varblock}
     \begin{varblock}{block example}[0.8\textwidth]{\ldots{}in favour of expressive code}<2->
-        \begin{Cpp}
+        \begin{lstlisting}[style=MyCpp]
             Person employee;
 
             if(employee.isEligibleForFullBenefits())
-        \end{Cpp}
+        \end{lstlisting}
     \end{varblock}
     \begin{uncoverenv}<3>
         \begin{itemize}
@@ -540,56 +537,56 @@
         \begin{onlyenv}<1-3>
             \vspace{-1mm}
             \begin{varblock}{block example}[0.98\textwidth]{Informative comment}
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     // Format matched:     hh:mm:ss dd Month yyyy
                     std::regex timePattern("(\\d{2}:){2}\\d{2}, \\d{2} \\S+ \\d{4}");
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
             \begin{varblock}{block example}[0.77\textwidth]{Explanation of intent}<uncover@2->
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     // Checking the residuum possibly not every
                     // iteration allows for speed up on GPUs
                     if(iterationNumber % CG_CHECK_RESIDUUM_EVERY == 0)
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
             \begin{varblock}{block example}[0.77\textwidth]{Clarification when using cryptic external API}<uncover@3>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     // Check if root was found up to desired precision
                     if(gsl_fcmp(functionValue, 0.0, epsilon) == 0)
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
         \end{onlyenv}
         \begin{varblock}{block example}[0.99\textwidth]{Amplification}<only@4>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 // See https://stackoverflow.com/a/1736040 for more information.
                 template<typename T>
                 std::string getDefaultForHelper(const T& number)
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \vspace{-1mm}
         \begin{varblock}{block example}[0.99\textwidth]{}<only@4>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 // Removing trailing spaces is crucial since any would break the
                 // following algorithm. It might leave the string unchanged, but
                 // the absence of trailing spaces is at the moment not guaranteed!
                 boost::trim_right(keyToDecipher);
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{onlyenv}<5>
             \begin{varblock}{block example}[0.98\textwidth]{TODO comments}
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     // TODO: The following two classes should be merged into one!
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
             \vspace{-2mm}
             \begin{varblock}{block example}[0.7\textwidth]{Legal comments}
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     /*******************************************
                      *  Copyright (c) 2018 Alessandro Sciarra  *
                      *                                         *
                      *  This file is part of BaHaMAS.          *
                      *******************************************/
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
         \end{onlyenv}
         \vspace{-5mm}
@@ -605,7 +602,7 @@
         \begin{onlyenv}<1>
             \vspace{-3mm}
             \begin{varblock}{block example}[0.94\textwidth]{Several bad habits in one example}<only@1>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     /**
                       * @param longTitle The complete title of the CD
                       * @param longAuthor The complete author of the CD
@@ -626,12 +623,12 @@
                             throw std::invalid_argument();
                         cdList.push_back(cd);
                     } // addCD method
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
         \end{onlyenv}
         \begin{onlyenv}<2>
             \begin{varblock}{block example}[0.7\textwidth]{The same code cleaned up}
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     void Jukebox::addCD(std::string longTitle,
                                         std::string longAuthor,
                                         int durationInMinutes)
@@ -644,7 +641,7 @@
                             throw std::invalid_argument();
                         cdList.push_back(cd);
                     }
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
             \vspace{-2mm}
             \begin{varblock}{block example}[0.7\textwidth]{}
@@ -720,50 +717,115 @@
 \section{Functions and Classes}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Common general aspects}
+    \vspace{-1mm}
     \begin{overlayarea}{\textwidth}{\textheight}
         \begin{varblock}{block alerted}[0.5\textwidth]{SMALL}
             Do \alert{one} thing. Do it \alert{well}. Do it \alert{only}!
         \end{varblock}
-        \begin{itemize}
+        \begin{itemize}[<only@1-3,5>]
             \item Functions and classes interfaces should stay small (fit one screen)
             \item \tc<2>{PP}{Classes should fulfil the single responsibility principle}
             \item \tc<3>{PP}{One level of abstraction per function}
         \end{itemize}
+        \begin{onlyenv}<3>
+            \begin{center}
+                \begin{minipage}{0.65\textwidth}
+                    \begin{enumerate}
+                        \item Let's start with an example of bad code
+                        \item and then have a look to how it should be
+                    \end{enumerate}
+                \end{minipage}
+            \end{center}
+        \end{onlyenv}
         \vspace{-2mm}
         \begin{varblock}{block example}[0.51\textwidth]{Single-responsibility class}<only@2>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 class Version {
                   public:
                     int getMajorVersionNumber();
                     int getMinorVersionNumber();
                     int getBuildNumber();
                 };
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{block example}[0.71\textwidth]{Single-level-of-abstraction function}<only@3>
-            \begin{Cpp}
+        \begin{varblock}{block example}[0.8\textwidth]{Impolite, rude code $\to$ up and down to understand it!}<only@4>
+            \begin{lstlisting}[style=MyCpp]
+                void MakeCoffee(const Coffee& typeOfCoffee){
+                    auto neededT = temperature(typeOfCoffee);
+                    if(neededT < T)
+                        warmUp(neededT);
+                    while(grinder != nullptr)
+                        prepareGrinder();
+                    grind(calculateGrams(typeOfCoffee));
+                    auto neededP = pressure(typeOfCoffee);
+                    prepareToBrew(neededT, neededP);
+                    if(status == READY_TO_BREW)
+                        brew(typeOfCoffee);
+                    else
+                        throw std::runtime_error("Unable to brew!");
+                }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{block example}[0.71\textwidth]{Single-level-of-abstraction function}<only@5>
+            \begin{lstlisting}[style=MyCpp]
                 void MakeCoffee(const Coffee& typeOfCoffee){
                     WarmUpMachineIfNeeded(typeOfCoffee);
                     GrindCoffee(typeOfCoffee);
                     SetPressureAndTemperature(typeOfCoffee);
                     BrewCoffee(typeOfCoffee);
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}{More about this one-thing idea}
-
+\begin{frame}[fragile]{More about this one-thing idea}
+    \begin{overlayarea}{\textwidth}{0.85\textheight}
+        \begin{varblock}{quote}[0.75\textwidth]{How big should a function be?}[Robert C. Martin]<only@1,3>
+            A function should do one thing. But what's one thing.
+            A function does one thing, if you cannot meaningfully extract another function from it.
+        \end{varblock}
+        \begin{varblock}{block example}[0.8\textwidth]{Back to our example}<only@2>
+            \begin{lstlisting}[style=MyCpp]
+                void MakeCoffee(const Coffee& typeOfCoffee){
+                    // 1. WarmUpMachineIfNeeded
+                    auto neededT = temperature(typeOfCoffee);
+                    if(neededT < T)
+                        warmUp(neededT);
+                    // 2. GrindCoffee
+                    while(grinder != nullptr)
+                        prepareGrinder();
+                    grind(calculateGrams(typeOfCoffee));
+                    // 3. SetPressureAndTemperature
+                    auto neededP = pressure(typeOfCoffee);
+                    prepareToBrew(neededT, neededP);
+                    // 4. BrewCoffee
+                    if(status == READY_TO_BREW)
+                        brew(typeOfCoffee);
+                    else
+                        throw std::runtime_error("Unable to brew!");
+                }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{block example}[0.71\textwidth]{Result after extraction}<only@3>
+            \begin{lstlisting}[style=MyCpp]
+                void MakeCoffee(const Coffee& typeOfCoffee){
+                    WarmUpMachineIfNeeded(typeOfCoffee);
+                    GrindCoffee(typeOfCoffee);
+                    SetPressureAndTemperature(typeOfCoffee);
+                    BrewCoffee(typeOfCoffee);
+                }
+            \end{lstlisting}
+        \end{varblock}
+    \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Limit the number of arguments}{Make useful abstractions whenever it helps}
-    \vspace{-3mm}
     \begin{varblock}{block example}[\textwidth]{When you call the function, which argument is what?}
-        \begin{Cpp}
+        \begin{lstlisting}[style=MyCpp]
             double Distance(double, double, double, double);
             double Distance(double, double, double, double, double, double);
-        \end{Cpp}
+        \end{lstlisting}
     \end{varblock}
     \begin{tikzpicture}
         \path coordinate (A) at (0,0) coordinate (B) at (3,1);
@@ -774,20 +836,23 @@
     \end{tikzpicture}
     \vspace{-1mm}
     \begin{varblock}{block example}[0.72\textwidth]{Isn't this much better?}<uncover@2>
-        \begin{Cpp}
-            struct Point2D {      |    struct Point3D {
-                double x, y;      |        double x, y, z;
-            };                    |    };
+        \begin{lstlisting}[style=MyCpp]
+            struct Point2D {           struct Point3D {
+                double x, y;               double x, y, z;
+            };                         };
 
             double Distance(std::pair<Point2D, Point2D>);
             double Distance(std::pair<Point3D, Point3D>);
-        \end{Cpp}
+        \end{lstlisting}
     \end{varblock}
+    \begin{tikzpicture}[remember picture, overlay]
+        \draw[visible on=<2>, thick] ($(current page.center)-(0.2,1.7)$) -- ++(0,-1);
+    \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{\PQ{I}ntegration \PQ{O}peration \PQ{S}egregation \PQ{P}rinciple}
-    \vspace{-9mm}
-    \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{overlayarea}{\textwidth}{0.85\textheight}
+        \vspace{-3mm}
         \begin{varblock}{block alerted}[\textwidth]{Clear separation of:}
             \begin{description}
                 \item[Operation:]   A function which contains exclusively logic, meaning transformations, control structures or API invocations.
@@ -795,21 +860,21 @@
             \end{description}
         \end{varblock}
         \vspace{-1mm}
-        \begin{varblock}{block example}[0.78\textwidth]{Operation}<only@1>
-            \begin{Cpp}
+        \begin{varblock}{block example}[0.75\textwidth]{Operation}<only@1>
+            \begin{lstlisting}[style=MyCpp]
                 bool isPrime(unsigned int number)
                 {
                     if(number == 1) return false;
-                    for(unsigned int i = 2; i <= sqrt(number); ++i)
+                    for(auto i = 2u; i <= std::sqrt(number); ++i)
                     {
                         if(number%i == 0) return false;
                     }
                     return true;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[0.62\textwidth]{Integration}<only@2>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 int main(int argc, char *argv[])
                 {
                     WelcomeUserToTheGame();
@@ -817,7 +882,7 @@
                     minesweeper.playGame();
                     PrintGameResult();
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
 \end{frame}
@@ -825,10 +890,9 @@
 
 
 %===================================================================================================%
-\section{(Unit) Tests}
+\section{Testing your code}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Software testing}{Test code is just as important as production code}
-    \vspace{2mm}
     \begin{columns}[c]
         \begin{column}{0.5\textwidth}
             \begin{itemize}
@@ -860,7 +924,7 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The \PQ{wrong} mental approach to testing}
-    \vspace{-2mm}
+    \vspace{2mm}
     \begin{itemize}
         \item I do not have time to waste writing tests.
         \item \alert{The result is reasonable, the code should be correct!}
@@ -888,6 +952,7 @@
         \item \alert{Tests are the key to be free to change (improve) the production code!}
         \item Keep balance between adding new code, writing tests and refactoring
     \end{itemize}
+    \vspace{3mm}
     \begin{uncoverenv}<2>
         \begin{center}
             \resizebox{!}{0.32\textheight}{
@@ -903,7 +968,6 @@
             }
         \end{center}
     \end{uncoverenv}
-
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The five principles clean tests should fulfil}
@@ -924,17 +988,17 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Unit tests}{The deeper level of testing}
-    \vspace{-6.5mm}
-    \begin{overlayarea}{\textwidth}{\textheight}
-        \begin{varblock}{}[0.8\textwidth]{}
-            \PB{Write tests for (every) unit of source code in the code base}
+    \begin{overlayarea}{\textwidth}{0.8\textheight}
+        \begin{varblock}{alert}[0.8\textwidth]{}
+            \alert{Write tests for (every) unit of source code in the code base}
         \end{varblock}
         \begin{onlyenv}<1>
             \vspace{2mm}
             \begin{itemize}
+                \setlength{\itemsep}{2mm}
                 \item A \PP{unit}: the smallest testable part of a code (e.g. \PP{function/method})
                 \item Strive to test a \PQ{single concept} per test function
-                \item In most languages, \alert{unit tests frameworks} are available
+                \item In most languages, \PS{unit tests frameworks} are available
                 \item Automatic build tools (e.g. CMake) offers a natural way to run tests
                 \item Know how much code you tested\\
                       $\;\to\;$ Code coverage tools (e.g. \URL[PP]{https://github.com/linux-test-project/lcov}{LCOV})
@@ -942,7 +1006,7 @@
         \end{onlyenv}
         \vspace{-2.5mm}
         \begin{varblock}{block example}[0.8\textwidth]{Boost unit test framework}<only@2>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 #define BOOST_TEST_MODULE Factorial
                 #include |+<boost/test/included/unit_test.hpp>+|
                 #include |+"factorial.hpp"+|
@@ -957,18 +1021,18 @@
                 {
                     BOOST_REQUIRE_EQUAL(factorial(5), 120);
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest\vphantom{p}}}<only@3>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
                 *** 1 failure detected in test suite "Factorial"
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=short}}<only@4>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
@@ -978,10 +1042,10 @@
                   1 test case out of 2 passed
                   1 test case out of 2 failed
                   1 test case out of 2 aborted
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=detailed}}<only@5>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 Running 2 test cases...
                 boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
 
@@ -996,7 +1060,7 @@
                     1 assertion out of 1 failed
                   Test case "NormalCases" passed with:
                     1 assertion out of 1 passed
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
     \begin{uncoverenv}<2->
@@ -1013,19 +1077,20 @@
         \item Values \\ \uncover<2->{\centerline{\includegraphics[scale=0.1]{TestingValue}}}
         \item Actions \\ \uncover<3->{\centerline{\includegraphics[scale=0.12, clip, trim=0 4cm 0 4cm]{TestingAction}}}
     \end{itemize}
+    \vspace{3mm}
     \uncover<3>{\hfill\ldots{}and anything that makes sense!}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Unit tests are not enough!}
-    \begin{varblock}{}[0.9\textwidth]{Integration tests}
-        \PB{Once you are sure that all components work correctly alone, be sure they work as expected together!}
-    \end{varblock}
-    \uncover<2>{
-        \begin{center}
+    \begin{uncoverenv}<2>
+        \begin{varblock}{}[0.9\textwidth]{Integration tests}
+            \PB{Once you are sure that all components work correctly alone, be sure they work as expected together!}
+        \end{varblock}
+            \begin{center}
             \includegraphics[height=4cm]{UnitTestVSIntegrationTestA}$\quad$
             \includegraphics[height=4cm]{UnitTestVSIntegrationTestB}
         \end{center}
-    }
+    \end{uncoverenv}
 \end{frame}
 %===================================================================================================%
 
@@ -1034,8 +1099,8 @@
 \section{General good practices}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{\PQ{D}on't \PQ{R}epeat \PQ{Y}ourself}
-    \vspace{-3mm}
-    \begin{overlayarea}{\textwidth}{\textheight}
+    \vspace{1mm}
+    \begin{overlayarea}{\textwidth}{0.8\textheight}
         \begin{itemize}
             \item If you are doing \alert{\emph{Copy \& Paste}}, you are doing it wrong!
             \item One of the most basic and yet most disregarded principle
@@ -1043,7 +1108,7 @@
         \end{itemize}
         \begin{varblock}{block example}[11cm]{Trivial example}<only@2-3>
             \begin{onlyenv}<2>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     double sum1=0;
                     for(const auto& data : dataSet1)
                         sum1 += data;
@@ -1054,10 +1119,10 @@
                     for(const auto& data : dataSet2)
                         sum2 += data;
                     sum2 /= dataSet2.size();
-                \end{Cpp}
+                \end{lstlisting}
             \end{onlyenv}
             \begin{onlyenv}<3>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     double calculateAverage(const std::vector<double>& dataSet)
                     {
                         double sum=0;
@@ -1068,33 +1133,67 @@
 
                     calculateAverage(dataSet1);
                     calculateAverage(dataSet2);
-                \end{Cpp}
+                \end{lstlisting}
             \end{onlyenv}
         \end{varblock}
-        \begin{varblock}{block example}[0.98\textwidth]{Less trivial example}<4->
-            \begin{Cpp}
+        \begin{varblock}{block example}[0.98\textwidth]{Less trivial example}<only@4-5>
+            \begin{lstlisting}[style=MyCpp]
                 double calculateAverage(const std::vector<double>& dataSet)
                 {
                    std::cout << "Function \"calculateAverage\" missing!\n";
                    exit(-1);
                 }
-             \end{Cpp}
+             \end{lstlisting}
             \begin{uncoverenv}<5>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     double calculateAverage(const std::vector<double>& dataSet)
                     {
                        std::cout << "Function \"" << __FUNCTION__ << "\" missing!\n";
                        exit(-1);
                     }
-                \end{Cpp}
+                \end{lstlisting}
             \end{uncoverenv}
+        \end{varblock}
+        \begin{varblock}{block example}[0.98\textwidth]{Traversing a complex structure}<6->
+            \begin{onlyenv}<6>
+                \begin{lstlisting}[style=MyCpp]
+                    // Imagine to have to do this very often
+                    for(auto& line : wiki)
+                    {
+                        if(line.isHeader())
+                            continue;
+                        for(auto& letter : line)
+                        {
+                            if(letter.isVowel())
+                                capitalize(letter);
+                        }
+                    }
+                    // How can you avoid duplication?
+                \end{lstlisting}
+            \end{onlyenv}
+            \begin{onlyenv}<7>
+                \begin{lstlisting}[style=MyCpp]
+                    void traverseAndTransform(WikiPage& wiki,
+                                              std::function<void(Letter)> transform)
+                    {
+                        for(auto& line : wiki){
+                            if(line.isHeader())
+                               continue;
+                            for(auto& letter : line)
+                                transform(letter);
+                        }
+                    }
+
+                    traverseAndTransform(wiki, /*lambda function*/);
+                \end{lstlisting}
+            \end{onlyenv}
         \end{varblock}
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{\PQ{K}eep \PQ{I}t \PQ{S}imple, \PQ{S}tupid}
+    \vspace{-3mm}
     \begin{overlayarea}{\textwidth}{\textheight}
-        \vspace{-9mm}
         \begin{quoteblock}{Avoid complexity!}[A. Einstein]
             Everything should be done as simple as possible, but not simpler.
         \end{quoteblock}
@@ -1110,8 +1209,8 @@
         \vspace{-5mm}
         \begin{varblock}{block example}[0.86\textwidth]{Simple example}<only@2-4>
             \begin{onlyenv}<2>
-                \begin{Cpp}
-                    std::vector<int> data = {1, -3, 2 8, 4, -9};
+                \begin{lstlisting}[style=MyCpp]
+                    std::vector<int> data = {1, -3, 2, 8, 4, -9};
 
                     auto first = data.begin(), last = data.end();
                     while (first != last) {
@@ -1121,31 +1220,31 @@
                         }
                         ++first;
                     }
-                \end{Cpp}
+                \end{lstlisting}
             \end{onlyenv}
             \begin{onlyenv}<3>
-                \begin{Cpp}
-                    std::vector<int> data = {1, -3, 2 8, 4, -9};
+                \begin{lstlisting}[style=MyCpp]
+                    std::vector<int> data = {1, -3, 2, 8, 4, -9};
 
                     auto it = std::find(data.begin(), data.end(), 4);
                     if(it != data.end())
                         makeReportForUser();
-                \end{Cpp}
+                \end{lstlisting}
             \end{onlyenv}
             \begin{onlyenv}<4>
-                \begin{Cpp}
-                    std::vector<int> data = {1, -3, 2 8, 4, -9};
+                \begin{lstlisting}[style=MyCpp]
+                    std::vector<int> data = {1, -3, 2, 8, 4, -9};
 
                     //Even better
                     if(isElementInVector(data, 4))
                         makeReportForUser();
-                \end{Cpp}
+                \end{lstlisting}
             \end{onlyenv}
         \end{varblock}
         \begin{onlyenv}<4>
-            \vspace{-1mm}
+            \vspace{-2.5mm}
             \begin{varblock}{block example}[0.86\textwidth]{}
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     template<typename T>
                     bool isElementInVector(const std::vector<T>& data,
                                            const T& value)
@@ -1153,12 +1252,12 @@
                         auto it = std::find(data.begin(), data.end(), value);
                         return it != data.end();
                     }
-                \end{Cpp}
+                \end{lstlisting}
             \end{varblock}
         \end{onlyenv}
         \begin{varblock}{block example}[0.88\textwidth]{Example from real life (Quake III Arena, 1999)}<only@5-6>
             \begin{uncoverenv}<6>
-                \begin{Cpp}
+                \begin{lstlisting}[style=MyCpp]
                     float Q_rsqrt(float number)
                     {
                         long i;  float x2, y;  const float threehalfs = 1.5F;
@@ -1174,23 +1273,23 @@
                         // y  = y * (threehalfs - (x2 * y * y));
                         return y;
                     }
-                \end{Cpp}
+                \end{lstlisting}
             \end{uncoverenv}
         \end{varblock}
         \begin{varblock}{block example}[0.78\textwidth]{Example from real life (Quake III Arena, 1999)}<only@7->
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 float Q_fastInverseSqrt(float number)
                 {
                     float approximateResult
                        = calculateApproximateInverseSqrt(number);
                     return refineResult(approximateResult, number);
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
-        \vspace{-2mm}
+        \vspace{-2.5mm}
+        \PrepareURLsymbol[red]
         \begin{varblock}{block example}[0.9\textwidth]{}<only@8>
-            \PrepareURLsymbol[red]
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 float calculateApproximateInverseSqrt(float number)
                 {
                     //Here some very low level operations are carried out.
@@ -1199,10 +1298,10 @@
                     floatAsInteger = 0x5f3759df - (floatAsInteger >> 1);
                     return * (float*) &i;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
         \begin{varblock}{block example}[0.9\textwidth]{}<only@9>
-            \begin{Cpp}
+            \begin{lstlisting}[style=MyCpp]
                 float refineResult(float result, float initialNumber)
                 {
                     //Here one iteration of the Newton's method is used.
@@ -1210,7 +1309,7 @@
                     float refinedResult = initialNumber * result * result;
                     return (3.0F - refinedResult) * result * 0.5F;
                 }
-            \end{Cpp}
+            \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
 \end{frame}
@@ -1231,12 +1330,13 @@
     \begin{itemize}
         \item Compiler do more and more a better job!
         \item Use optimisations flags (e.g. \PP{\texttt{-O1}}, \PP{\texttt{-O3}} with \texttt{g++} and \texttt{clang})
-        \item \alert{Never} sacrifice clean code in name of claimed better performance!
+        \item \alert{Never} sacrifice clean code in name of \textbf{claimed} better performance!
         \item Only optimise after having used a profiler and having written tests!
     \end{itemize}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The pathfinder rule}
+    \vspace{-5mm}
     \begin{columns}[c]
         \begin{column}{0.4\textwidth}
             \begin{varblock}{}[\columnwidth]{}
@@ -1247,11 +1347,11 @@
             \includegraphics[width=0.9\textwidth]{Firecamp.jpg}
         \end{column}
     \end{columns}
-    \vspace{3mm}
+    \vspace{6mm}
     \begin{itemize}
         \item To clean an existing code base takes time and requires effort
         \item Aim for tiny but continuous progress
-        \item Applying the pathfinder rule is a natural way to pay back technical debt
+        \item Applying the pathfinder rule is a way to pay back technical debt
         \item Any IDE will help you in quickly achieving easy refactoring
     \end{itemize}
 \end{frame}
@@ -1264,6 +1364,7 @@
 \againframe<2>{THM}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Go back and immediately apply what you learnt!}{Keep in mind good practices next time you code}
+    \vspace{2mm}
     \begin{itemize}
         \item Use these slides as a starting point
         \item Try to apply principles day after day
@@ -1272,6 +1373,7 @@
         \item Refer to the literature and go beyond this material, keep improving
         \item Develop your \PP{code-sense}, experience will make you quicker
     \end{itemize}
+    \vspace{2mm}
     \begin{quoteblock}{Moral of the story}[R. C. Martin]
         An old violinist got lost on his way to a performance.
         He stopped an old man on the corner and asked him how to get to Carnegie Hall.
@@ -1283,6 +1385,5 @@
     \end{tikzpicture}
 \end{frame}
 %===================================================================================================%
-
 
 \end{document}
