@@ -36,6 +36,7 @@
 
 %My commands
 \newcommand<>{\tc}[2]{\textcolor#3{#1}{#2}}
+\newcommand{\myCopyright}{\raisebox{-7pt}{\large\copyright}}
 
 \makeatletter
 \patchcmd{\beamer@sectionintoc}
@@ -171,13 +172,13 @@
 \begin{frame}[plain,noframenumbering]{}
     \begin{tikzpicture}[remember picture, overlay]
         \node (O) at (current page.center) {\includegraphics[width=\textwidth]{WTF}};
-        \node[below = 0mm of O, font=\tiny] {\raisebox{-7pt}{\large\copyright} 2008 Focus Shift};
+        \node[below = 0mm of O, font=\tiny] {\myCopyright\ 2008 Focus Shift};
     \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{}
     \begin{overlayarea}{\textwidth}{\textheight}
-        \begin{varblock*}{quote}[0.85\textwidth]{Clean code}[M.~Feathers]
+        \begin{varblock*}{quote}[0.85\textwidth]{Clean code}[Michael Feathers]
             Clean code always looks like it was written by someone who cares.
             There is nothing obvious that you can do to make it better.
             [$\ldots$] if you try to imagine improvements, you're led back to where you are.
@@ -358,7 +359,7 @@
         \end{onlyenv}
         \begin{onlyenv}<3>
             \begin{lstlisting}[style=MyCpp]
-                using std::vector< std::vector<int> > = myVecVec;
+                using std::vector<std::vector<int>> = myVecVec;
 
                 myVecVec getFlaggedCells(const myVecVec& gameBoard)
                 {
@@ -699,6 +700,7 @@
         \end{varblock}
     \end{onlyenv}
     \begin{onlyenv}<5>
+        \vspace{-2mm}
         \begin{itemize}
             \item How big should be a file? \\ $\to\;$ Try to stay \PP{below few hundreds}, the reader will be grateful!
             \item Give some vertical breath to your code
@@ -706,16 +708,19 @@
                   $\to\;$ Crucial if the code is readable from browser (e.g. \PP{GitHub})
             \item Consider horizontal alignment and spacing (e.g. \PP{around operators})
             \item Be coherent (e.g. \PP{braces})
-            \item How to work when different people write in the same code base?
         \end{itemize}
-        \begin{tikzpicture}[remember picture, overlay]
-            \node[anchor=north east, rounded corners=1mm, draw=ALERT, outer sep=6mm] at (current page.north east) {
-                \begin{tabular}{c}
-                    Agree on a style and \alert{use a tool}\\
-                    (e.g.\ clang-format) to enforce it
-                \end{tabular}
-            };
-        \end{tikzpicture}
+        \vspace{-1mm}
+        \begin{varblock}{alert}[0.9\textwidth]{How to work when different people write in the same code base?}
+            Agree on a style and \alert{use a tool} (e.g.\ clang-format) to enforce it
+        \end{varblock}
+%        \begin{tikzpicture}[remember picture, overlay]
+%            \node[anchor=north east, rounded corners=1mm, draw=ALERT, outer sep=6mm] at (current page.north east) {
+%                \begin{tabular}{c}
+%                    Agree on a style and \alert{use a tool}\\
+%                    (e.g.\ clang-format) to enforce it
+%                \end{tabular}
+%            };
+%        \end{tikzpicture}
     \end{onlyenv}
 \end{frame}
 %===================================================================================================%
@@ -790,9 +795,11 @@
 \begin{frame}[fragile]{More about this one-thing idea}
     \begin{overlayarea}{\textwidth}{0.85\textheight}
         \begin{varblock}{quote}[0.75\textwidth]{How big should a function be?}[Robert C. Martin]<only@1,3>
-            A function should do one thing.
-            But what's one thing?
-            A function does one thing, if you cannot meaningfully extract another function from it.
+            \uncover<3>{
+                A function should do one thing.
+                But what's one thing?
+                A function does one thing, if you cannot meaningfully extract another function from it.
+            }
         \end{varblock}
         \begin{varblock}{block example}[0.8\textwidth]{Back to our example}<only@2>
             \begin{lstlisting}[style=MyCpp]
@@ -912,6 +919,7 @@
                           \item System testing
                           \item Acceptance testing
                       \end{itemize}
+                      \vspace{3mm}
                 \item \PP{Testing types and techniques}
                       \begin{itemize}
                           \item \alert<2>{Regression testing}
@@ -1091,15 +1099,28 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Unit tests are not enough!}
-    \begin{uncoverenv}<2>
-        \begin{varblock}{}[0.9\textwidth]{Integration tests}
-            \PB{Once you are sure that all components work correctly alone, be sure they work as expected together!}
-        \end{varblock}
+    \vspace{-5mm}
+    \begin{overlayarea}{\textwidth}{0.8\textheight}
+        \begin{uncoverenv}<2->
+            \begin{varblock}{}[0.9\textwidth]{Integration tests}
+                \PB{Once you are sure that all components work correctly alone, be sure they work as expected together!}
+            \end{varblock}
             \begin{center}
-            \includegraphics[height=4cm]{UnitTestVSIntegrationTestA}$\quad$
-            \includegraphics[height=4cm]{UnitTestVSIntegrationTestB}
-        \end{center}
-    \end{uncoverenv}
+                \begin{onlyenv}<2>
+                    \includegraphics[height=4cm]{UnitTestVSIntegrationTestA}$\quad$
+                    \includegraphics[height=4cm]{UnitTestVSIntegrationTestB}\\
+                \end{onlyenv}
+                \begin{onlyenv}<3>
+                    \includegraphics[height=35mm]{MarsClimateOrbiter}\\
+                    {
+                        \scriptsize
+                        \URL[PB]{http://www.vitalstatistics.info/uploads/mars\%20climate\%20orbiter.jpg}{Mars Climate Orbiter}
+                        lost in 1999 -- By NASA/JPL/Corby Waste -- \myCopyright\ Public Domain
+                    }
+                \end{onlyenv}
+            \end{center}
+        \end{uncoverenv}
+    \end{overlayarea}
 \end{frame}
 %===================================================================================================%
 
@@ -1149,20 +1170,23 @@
             \begin{lstlisting}[style=MyCpp]
                 double calculateAverage(const std::vector<double>& dataSet)
                 {
-                   std::cout << "Function \"calculateAverage\" missing!\n";
-                   exit(-1);
+                    // ...
+                    throw std::runtime_error("Error in \"calculateAverage\"");
                 }
              \end{lstlisting}
             \begin{uncoverenv}<5>
                 \begin{lstlisting}[style=MyCpp]
                     double calculateAverage(const std::vector<double>& dataSet)
                     {
-                       std::cout << "Function \"" << __FUNCTION__ << "\" missing!\n";
-                       exit(-1);
+                        // ...
+                        using namespace std::string_literals;
+                        throw std::runtime_error("Error in \""s + __func__ + "\""s);
                     }
                 \end{lstlisting}
             \end{uncoverenv}
         \end{varblock}
+        \PrepareURLsymbol[PB]
+        \FrameRemark<5>{\texttt{\_\_func\_\_} in C++ is an implementation-defined string and is just one among \URL*{https://stackoverflow.com/a/4384825/14967071}{other possibilities}.}
         \begin{varblock}{block example}[0.98\textwidth]{Traversing a complex structure}<6->
             \begin{onlyenv}<6>
                 \begin{lstlisting}[style=MyCpp]
