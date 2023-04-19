@@ -1,4 +1,4 @@
-\documentclass[14pt,usenames,dvipsnames]{beamer}
+\documentclass[14pt,usenames,dvipsnames,svgnames]{beamer}
 \usepackage[english]{babel}
 \usepackage[misc]{ifsym}
 \usepackage{fontspec,mathabx,multicol,listings,comment,fontawesome,pgfornament}
@@ -1013,7 +1013,7 @@
             \vspace{2mm}
             \begin{itemize}
                 \setlength{\itemsep}{2mm}
-                \item A \PP{unit}: the smallest testable part of a code (e.g. \PP{function/method})
+                \item A \PP{unit}: the smallest testable part of a code
                 \item Strive to test a \PQ{single concept} per test function
                 \item In most languages, \PS{unit tests frameworks} are available
                 \item Automatic build tools (e.g. CMake) offers a natural way to run tests
@@ -1022,7 +1022,7 @@
             \end{itemize}
         \end{onlyenv}
         \vspace{-2.5mm}
-        \begin{varblock}{block example}[0.8\textwidth]{Boost unit test framework}<only@2>
+        \begin{varblock}{block example}[0.7\textwidth]{Boost unit test framework}<only@2>
             \begin{lstlisting}[style=MyCpp]
                 #define BOOST_TEST_MODULE Factorial
                 #include |+<boost/test/included/unit_test.hpp>+|
@@ -1040,31 +1040,34 @@
                 }
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest\vphantom{p}}}<only@3>
-            \begin{lstlisting}[style=MyCpp]
-                Running 2 test cases...
-                boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
+        \begin{varblock}{}[0.86\textwidth]{\small\texttt{./factorialTest\vphantom{p}}}<only@3>
+            \begin{lstlisting}[style=MyBash]
+                |+Running 2 test cases...
+                boostTest.cpp(12): fatal error in "SpecialCases":
+                    critical check factorial(0) == 1 failed [0 != 1]
 
-                *** 1 failure detected in test suite "Factorial"
+                *** 1 failure detected in test suite "Factorial"+|
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=short}}<only@4>
-            \begin{lstlisting}[style=MyCpp]
-                Running 2 test cases...
-                boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
+        \begin{varblock}{}[0.86\textwidth]{\small\texttt{./factorialTest --report\_level=short}}<only@4>
+            \begin{lstlisting}[style=MyBash]
+                |+Running 2 test cases...
+                boostTest.cpp(12): fatal error in "SpecialCases":
+                    critical check factorial(0) == 1 failed [0 != 1]
 
                 Test suite "Factorial" failed with:
                   1 assertion out of 2 passed
                   1 assertion out of 2 failed
                   1 test case out of 2 passed
                   1 test case out of 2 failed
-                  1 test case out of 2 aborted
+                  1 test case out of 2 aborted+|
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{block example}[0.8\textwidth]{\small\texttt{./factorialTest --report\_level=detailed}}<only@5>
-            \begin{lstlisting}[style=MyCpp]
-                Running 2 test cases...
-                boostTest.cpp(12): fatal error in "SpecialCases": critical check factorial(0) == 1 failed [0 != 1]
+        \begin{varblock}{}[0.86\textwidth]{\small\texttt{./factorialTest --report\_level=detailed}}<only@5>
+            \begin{lstlisting}[style=MyBash]
+                |+Running 2 test cases...
+                boostTest.cpp(12): fatal error in "SpecialCases":
+                    critical check factorial(0) == 1 failed [0 != 1]
 
                 Test suite "Factorial" failed with:
                   1 assertion out of 2 passed
@@ -1076,7 +1079,7 @@
                   Test case "SpecialCases" aborted with:
                     1 assertion out of 1 failed
                   Test case "NormalCases" passed with:
-                    1 assertion out of 1 passed
+                    1 assertion out of 1 passed+|
             \end{lstlisting}
         \end{varblock}
     \end{overlayarea}
@@ -1087,6 +1090,7 @@
                  {\URL*{https://www.boost.org/doc/libs/1_67_0/libs/test/doc/html/index.html}{Boost.Test} \PP{$\leftarrow$ Check me out!}};
         \end{tikzpicture}
     \end{uncoverenv}
+    \FrameRemark<1>{See the \emph{Clean testing} talk for more information about what a unit should be.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{What should I test and how?}
