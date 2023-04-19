@@ -40,7 +40,9 @@ literate=% literate={<replace>}{<replacement text>}{<width>}
   {\#include}{{{\color{CarnationPink}\#include}}}{7},
 morekeywords={real, vector, Minesweeper, myVecVec, Cell, SetOfCells, regex, T, string, CD,
               invalid_argument, Jukebox, Coffee, Version, Point2D, Point3D, Person, pair,
-              runtime_error, WikiPage, Letter, function},
+              runtime_error, WikiPage, Letter, function, InitGoogleTest, CoffeeMachine,
+              MockCoffeeMachine, Updater, Seconds, StorageServer, Dslash, hmc_float, File,
+              Stat_t, StatOptions},
 emph=[1]{calculateAverage, size, exit, begin, end, find, makeReportForUser, isElementInVector,
          main, WelcomeUserToTheGame, playGame, PrintGameResult, isPrime, sqrt, push_back, FC,
          getFlaggedCells, isFlagged, at, isEligibleForFullBenefits, gsl_fcmp, getDefaultForHelper,
@@ -48,29 +50,35 @@ emph=[1]{calculateAverage, size, exit, begin, end, find, makeReportForUser, isEl
          BrewCoffee, getMajorVersionNumber, getMinorVersionNumber, getBuildNumber, Distance, factorial,
          Q_rsqrt, Q_fastInverseSqrt, calculateApproximateInverseSqrt, refineResult, get, fetch, retrieve,
          obtain, temperature, warmUp, prepareGrinder, grind, calculateGrams, pressure, prepareToBrew, brew,
-         transform, isHeader, isVowel, capitalize, traverseAndTransform},
+         transform, isHeader, isVowel, capitalize, traverseAndTransform, cube, warmUp, UpdateAsync, SleepFor,
+         Updated, StartLogCapture, Start, Contains, Logs, GetStorageServerHandle, Store, Load, rand,
+         test_fermionmatrix, Stat, StatWithOptions, Times, max},
 emphstyle=[1]{\color{NavyBlue}}, %Functions
 emph=[2]{cout, data, sum, sum1, sum2, data, dataSet, dataSet1, dataSet2, first, last, argc, argv, minesweeper,
          number, i, c, f, b, list, gameBoard, flaggedCells, cell, realDaysPerIdealWeek, totalRealWeeksNeeded,
          realDaysPerTask, taskDaysEstimate, realWeeksPerTask, j, e, employee, timePattern, iterationNumber,
          functionValue, epsilon, it, value, keyToDecipher, longTitle, longAuthor, durationInMinutes, cd,
          typeOfCoffee, x, y, z, x2, approximateResult, floatAsInteger, initialNumber, refinedResult,
-         threehalfs, result, timestamp, ymdhms, neededT, neededP, line, letter, wiki, __func__},
+         threehalfs, result, timestamp, ymdhms, neededT, neededP, line, letter, wiki, __func__, machine,
+         brewingT, updater, server, my_val, refs, file, stat, opts, n},
 emphstyle=[2]{\color{Orange}}, %Variables
 emph=[3]{if, else, while, do, for, case, switch},
 emphstyle=[3]{\color{violet}}, %Loops, if, etc.
 emph=[4]{const, auto, break, continue, default, static, return, struct, NULL, sizeof, typedef,
-         template, typename, true, false, throw, public, class, using, nullptr},
+         template, typename, true, false, throw, public, class, using, nullptr, override, virtual},
 emphstyle=[4]{\color{ProcessBlue}}, %Logical keywords
-emph=[5]{std, boost, string_literals},
+emph=[5]{std, boost, string_literals, testing, constants, Frobber, physics, fermionmatrix, numeric_limits},
 emphstyle=[5]{\color{Maroon}}, %Namespaces
 emph=[6]{STATUS_VALUE, FLAGGED, WORKING_DAYS_PER_WEEK, NUMBER_OF_TASKS, HOURLY_FLAG,
          CG_CHECK_RESIDUUM_EVERY, BOOST_AUTO_TEST_CASE, BOOST_TEST_MODULE, BOOST_REQUIRE_EQUAL,
-         READY_TO_BREW},
+         READY_TO_BREW, BOOST_TEST_MODULE, BOOST_TEST, RUN_ALL_TESTS, EXPECT_EQ, TEST, VERIFY,
+         BOOST_REQUIRE_CLOSE, EXPECT_TRUE, EXPECT_THAT, EXPECT_CALL},
 emphstyle=[6]{\color{Gray}}, %Macros
 emph=[7]{age, flags, title, author, tracks, duration, cdList, T, grinder, status},
 emphstyle=[7]{\color{Peach!50!Purple}}, %Members
-emph=[8]{Factorial, SpecialCases, NormalCases},
+emph=[8]{Factorial, SpecialCases, NormalCases, first_test, FactorialTest, HandlesZeroInput,
+         HandlesPositiveInput, cube_test, warmUp_test, UpdaterTest, RunsFast, Logger, LogWasCalled,
+         Server, StorageTest, Dirac_M, Filesystem, FSUsage, BasicTests},
 emphstyle=[8]{\color{Blue}}, %Boost cases and suite
 %Additional customizations
 autogobble=true, % lstautogobble needed!
