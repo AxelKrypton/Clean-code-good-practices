@@ -42,6 +42,12 @@
     \setlength{\textsize}{\f@size pt}
     \newcommand{\emoji}[1]{\;\raisebox{-0.15\textsize}{\includegraphics[height=\f@size pt]{#1}}}
 \makeatother
+\newcommand{\then}{\raisebox{2pt}{$\;\drsh\;$}}
+\newcommand{\Then}[1]{%
+    \pgfmathwidth{"\then"}
+    \pgfmathparse{\linewidth-\pgfmathresult}
+    \then\parbox[t]{\pgfmathresult pt}{\raggedright #1}
+}
 
 
 \makeatletter
@@ -64,7 +70,7 @@
 \subtitle{Good practices in general coding}
 \author{Alessandro Sciarra}
 \institute{Z02~--~Software Development Center}
-\date{XX July 2023}
+\date{XX August 2023}
 \titlegraphic{\includegraphics[width=25mm]{LogoCRC}}
 \titlepagelogo{\includegraphics[width=25mm]{LogoGoethe}}
 %===============================================================%
@@ -76,11 +82,11 @@
     \end{frame}
 }
 \begin{document}
-\begin{comment}
 %===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
 \end{frame}
+\begin{comment}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[plain,noframenumbering]{Prelude}
     \begin{equation*}
@@ -399,7 +405,6 @@
     \FrameRemark{I already mentioned this in the \textsl{Clean code} talk.}
 \end{frame}
 %===================================================================================================%
-\end{comment}
 
 
 %===================================================================================================%
@@ -439,8 +444,7 @@
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}[fragile]{A small interlude: Unit test frameworks}{Essential for self-validation and automation!}
-    \vspace{-2mm}
+\begin{frame}[fragile]{A small interlude: Unit test frameworks for C++}{Essential for self-validation and automation!}
     \begin{overlayarea}{\textwidth}{0.7\textheight}
         \begin{enumerate}[<+->]
             \item Boost Test Library\hfill
@@ -523,6 +527,7 @@
             \draw[thick, visible on=<3>] ($(corner)-(0.335\textwidth,0.13)$) -- ++(-0.12,0) -- ++(0,-0.68) -- ++(0.12,0);
         \end{tikzpicture}
     \end{overlayarea}
+    \FrameRemark{If you use a different language, you can find at the Wikipedia link lists for most programming languages.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Having tests is not enough, you must trust them!}{Few words about tests correctness}
@@ -561,7 +566,7 @@
                 }
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{example}[0.8\textwidth]{This is probably useless}<only@4>
+        \begin{varblock}{alert}[0.8\textwidth]{This is probably useless}<only@4>
             \begin{lstlisting}[style=MyCpp]
                 class MockCoffeeMachine : public CoffeeMachine {
                     //For simplicity we assume always in temperature
@@ -687,11 +692,11 @@
         \end{itemize}
         \vspace{3mm}
         \begin{varblock}{example}[0.5\textwidth]{}
-            \large Let's see some examples!
+            \large\bfseries\PS{Let's see some examples!}
         \end{varblock}
     \end{onlyenv}
     \begin{onlyenv}<2-3>
-        \begin{varblock}{example}[\textwidth]{A sneaky flaky test}
+        \begin{varblock}{alert}[\textwidth]{A sneaky flaky test: What happens if the test-system is overloaded?}
             \begin{lstlisting}[style=MyCpp]
                 TEST(UpdaterTest, RunsFast) {
                     Updater updater;
@@ -701,7 +706,7 @@
                 }
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{example}[\textwidth]{An infamous brittle pattern}<uncover@3>
+        \begin{varblock}{alert}[\textwidth]{An infamous brittle pattern}<uncover@3>
             \begin{lstlisting}[style=MyCpp]
                 TEST(Logger, LogWasCalled) {
                     StartLogCapture();
@@ -720,7 +725,7 @@
         \end{tikzpicture}
     \end{onlyenv}
     \begin{onlyenv}<4-5>
-        \begin{varblock}{example}[\textwidth]{Where are the reference values coming from?}
+        \begin{varblock}{alert}[\textwidth]{Where are the reference values coming from?}
             \begin{lstlisting}[style=MyCpp]
                 BOOST_AUTO_TEST_CASE(Dirac_M)
                 {
@@ -731,7 +736,7 @@
                 }
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{example}[\textwidth]{A non-hermetic test: What if run twice in parallel?}<uncover@5>
+        \begin{varblock}{alert}[\textwidth]{A non-hermetic test: What if run twice in parallel?}<uncover@5>
             \begin{lstlisting}[style=MyCpp]
                 TEST(Server, StorageTest) {
                     StorageServer* server = GetStorageServerHandle();
@@ -744,7 +749,7 @@
     \end{onlyenv}
     \begin{onlyenv}<6>
         \vspace{-3mm}
-        \begin{varblock}{example}[\textwidth]{Deep dependence example}<only@6>
+        \begin{varblock}{alert}[\textwidth]{Deep dependence example}<only@6>
             \begin{lstlisting}[style=MyCpp]
                 class File {
                   public:
@@ -760,16 +765,72 @@
             \end{lstlisting}
         \end{varblock}
         \begin{varblock}{quote}[\textwidth]{The law of implicit interfaces (AKA Hyrum's law)}[Hyrum Wright]<only@6>
-            Given enough users of your public interface, soon or later someone will start implicitly relying on your implementation details (speed, memory consumption, etc.).\\[-1.5ex]~
+            Given enough users of your public interface, soon or later someone will start implicitly relying on your implementation details (speed, memory consumption, etc.).\\[-1.2ex]~
         \end{varblock}
     \end{onlyenv}
-    \FrameRemark{This list and all GoogleTest example are taken from Titus Winters' and Hyrum Wright's talk at CppCon2015.}
+    \FrameRemark{This list and all GoogleTest examples are taken from Titus Winters' and Hyrum Wright's talk at CppCon2015.}
 \end{frame}
 %===================================================================================================%
 
 
 %===================================================================================================%
-\section[White and black box testing]{The weaknesses of white and black box testing}
+\section{The curse of the \textbf{unit} word}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{What is a \textbf{unit} in unit testing?}
+    \begin{overlayarea}{\textwidth}{0.38\textheight}
+        \begin{onlyenv}<1>
+            \begin{varblock}{quote}[0.7\textwidth]{}[Wikipedia]
+                A group of related functions often called a module.
+            \end{varblock}
+            \begin{varblock}{quote}[0.7\textwidth]{}[Ian Cooper]
+                A unit test should test a requirement, only test against the stable contract of the API.
+            \end{varblock}
+        \end{onlyenv}
+        \begin{onlyenv}<2>
+            \vspace{-4mm}
+            \begin{center}
+                \includegraphics[width=0.7\textwidth]{Fragile_test_problem}
+            \end{center}
+        \end{onlyenv}
+    \end{overlayarea}
+    \begin{varblock}{alert}[0.98\textwidth]{A unit is not necessarily a class or a function}
+        This is possibly one of the most misunderstood concepts in software engineering in the last decade.
+        Sometimes a unit is a class or a function, but there should be a good reason for such a correspondence.
+        \textbf{More often a unit should be (the public API of) a module.}
+    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\AlertFrame{
+    \begin{tabular}{c}
+        Wait, what's wrong\\ in testing each single class?
+    \end{tabular}
+}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{It depends}
+    \vspace{-3mm}
+    \begin{varblock}{quote}[\textwidth]{TDD, Where Did It All Go Wrong}[Ian Cooper]
+        A couple of times we're very proud of the fact that we produced some code that went to production with almost zero defects.
+        [...]
+        I looked at this test suite.
+        One things I noticed was that \alert{we had about three times as much test code as production code}.
+    \end{varblock}
+    \begin{itemize}
+        \item Some classes are simply implementation details\\
+              \then You would like to freely change them
+        \item Imagine a module with few classes working together \Remark{in your implementation, today}\\
+              \then Does it make sense to mock all but one several times?
+        \item If a class happens to be the API of a module, probably that's a unit
+    \end{itemize}
+\end{frame}
+%===================================================================================================%
+
+
+%===================================================================================================%
+\section[White- and black-box testing]{The weaknesses of white- and black-box testing}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{White box testing}
+
+\end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 % - White box -> we tighten testing and production code e.g. with friends
 %   (sometimes neede -> start to test legacy code)
@@ -804,5 +865,6 @@
 \section{What to do, now?}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %===================================================================================================%
+\end{comment}
 
 \end{document}
