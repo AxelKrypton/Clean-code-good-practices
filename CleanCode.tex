@@ -56,11 +56,11 @@
 %===============================================================%
 \title{Clean code}
 \subtitle{Good practices in general coding}
-\author{Alessandro Sciarra}
+\author{~\\[-5mm]Alessandro Sciarra}
 \institute{Z02~--~Software Development Center}
-\date{23.02.2023}
-\titlegraphic{\includegraphics[width=25mm]{LogoCRC}}
-\titlepagelogo{\includegraphics[width=25mm]{LogoGoethe}}
+\date{06 July 2023}
+\titlegraphic{\includegraphics[width=16mm]{LogoCRC}}
+\titlepagelogo{\includegraphics[width=26mm]{LogoGoethe}}
 %===============================================================%
 
 \AtBeginSection[] % <- Empty optional argument, do nothing for \section*
@@ -74,18 +74,18 @@
 %===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south, inner ysep=4pt] at ($(current page.south)!0.58!(current page.south east)+(0mm,1mm)$)
+            {\includegraphics[width=13mm]{LogoPUNCH}};
+        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
+            {\includegraphics[width=10mm]{CC-BY}};
+        \node[anchor=south, font=\small, text=BGLIGHT]
+            (Axel) at (license.north)
+            {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
+    \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[plain,noframenumbering]{Prelude}
-    \begin{equation*}
-        \text{The slides will be available on the web}\,
-        \left\{
-        \begin{aligned}
-            &\text{\URL[PB]{https://th.physik.uni-frankfurt.de/~strongmatter/\#Seminars}{CRC-TR211}} \\
-            &\text{\URL[PP]{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}} \\
-        \end{aligned}
-        \right.
-    \end{equation*}
     \vspace{-3mm}
     \begin{varblock}{block example}[0.8\textwidth]{Leave me a feedback}
         Was the talk clear, useful, inspiring?\\
@@ -93,11 +93,14 @@
         Any general comment? $\quad$
         \tc{PP}{\href{mailto:sciarra@th.physik.uni-frankfurt.de}{{\small\Letter}$\;$Alessandro}}
     \end{varblock}
-    \vspace{1mm}
+    \vspace{3mm}
     \PrepareURLsymbol[PT]
-    \begin{varblock}{block alerted}[0.9\textwidth]{Disclaimer}
-        Slides are quite full of text for later reading. \\
-        It is about common sense, exceptions might exist. Let us discuss!
+    \begin{varblock}{block alerted}[0.8\textwidth]{Disclaimer}
+        \begin{enumerate}
+            \item Slides are quite full of text for later reading.
+            \item It is about common sense, exceptions might exist.
+            \item Let us discuss!
+        \end{enumerate}
     \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -147,19 +150,19 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Tools of developer daily life}{\uncover<2->{Pick one tool from each category and know how to use it}}
-    \begin{varblock}{}[0.84\textwidth]{}
-        \small\PT{Not} just a compiler and a mentor (e.g. Google, Stack Exchange, textbook)
+    \begin{varblock}{example}[0.84\textwidth]{Your toolkit should contain more than you might think!}
+        \small\PS{Not} just a compiler and a mentor (e.g. Google, Stack Exchange, textbook)
     \end{varblock}
     \uncover<2->{
         \begin{itemize}
             \setlength{\itemsep}{0.5ex}
-            \item \tc{PP}{\PQ{I}ntegrated \PQ{D}evelopment \PQ{E}nvironment (e.g. Eclipse)}
-            \item \tc{PP}{Test support - Build automation (e.g. CMake)}
-            \item Version control system (e.g. Git) $\;\to\;$ GitHub, Redmine, GitLab, etc.
-            \item Debugger
+            \item \alert{Integrated Development Environment} (e.g. Visual Studio Code, Eclipse)
+            \item \alert{Tests support -- Build automation} (e.g. CMake)
+            \item \PB{Version control system} (e.g. Git) $\;\to\;$ GitHub, Redmine, GitLab, etc.
             \item Profiler
-            \item Static analysis - \tc{PP}{Formatter} (e.g. clang suite)
+            \item Static analysis -- \PB{Formatter} (e.g. clang suite)
             \item Different compilers
+            \item \textcolor{bg!80!normal text.fg}{Debugger} \Remark{Clean code does not require to be debugged!}
         \end{itemize}
     }
 \end{frame}
@@ -194,7 +197,7 @@
                 You know you are working on clean code when each routine you read turns out to be pretty much what you expected.
             \end{varblock*}
         \end{onlyenv}
-        \FrameRemark<1>{Inventor of the SOLID principle, of the C++ language, of the Booch method and of the Wiki, respectively.}
+        \FrameRemark<1>{Inventor of the SOLID principle, of the C++ language, of the Booch method and of the Wiki, respectively (top to bottom).}
         \begin{onlyenv}<2>
             \vspace{3mm}
             \begin{itemize}
@@ -403,14 +406,26 @@
 \begin{frame}[fragile]{Use names which can be searched}
     \vspace{-2mm}
     \begin{overlayarea}{\textwidth}{\textheight}
-        \begin{varblock}{alert}{Rule of thumb}
-            The length of a name should correspond to the size of its scope
+        \begin{varblock}{alert}[\textwidth]{Rule of thumb}
+            The length of a name should be chosen w.r.t. to the size of its scope
         \end{varblock}
-        \vspace{-1mm}
-        \begin{itemize}
-            \item Single-letter names \textbf{only} for local variables inside \textbf{short scopes}
-            \item IDE very good at renaming variables $\;\Rightarrow\;$ rename, rename, rename!
-        \end{itemize}
+        \begin{center}
+            \begin{minipage}{0.9\textwidth}
+                \begin{description}
+                    \item[\textbf{Variables:}] Proportionally to their scope size
+                    \item[\textbf{Functions:}] In inverse proportion to their scope (cf.\ C++ STL)
+                \end{description}
+            \end{minipage}
+        \end{center}
+        \vspace{1mm}
+        \begin{onlyenv}<1>
+            \begin{itemize}
+                \item Single-letter names \textbf{only} for local variables inside \textbf{short scopes}
+                \item Single-word names \textbf{a must} for functions in widely used \textbf{libraries}
+                \item IDE very good at renaming variables $\;\Rightarrow\;$ rename, rename, rename!
+            \end{itemize}
+        \end{onlyenv}
+        \vspace{-4mm}
         \begin{varblock}{block example}{Something like this\ldots}<only@2>
             \begin{lstlisting}[style=MyCpp]
                 for(int j = 0; j < 34; j++)
@@ -533,7 +548,7 @@
                 \item Informative comment
                 \item Explanation of intent, Clarification
                 \item<only@5-> Amplification
-                \item<only@6-> \PQ{TODO comments}{$\;$\scriptsize $\to\;$border line: really needed in a code? Take time to go through them!\tikzmark{todoEnd}}
+                \item<only@6-> \PQ{TODO comments}{$\;$\scriptsize $\to\;$border line: really needed in a code? Do not check them in!\tikzmark{todoEnd}}
                 \item<only@6-> \PQ{Legal comments}{$\;$\scriptsize $\to\;$border line: not legally required \& overlap with version control.}
             \end{itemize}
             \begin{onlyenv}<6->
@@ -736,7 +751,7 @@
             Do \alert{one} thing. Do it \alert{well}. Do it \alert{only}!
         \end{varblock}
         \begin{itemize}[<only@1-3,5>]
-            \item Functions and classes interfaces should stay small (fit one screen)
+            \item Functions and classes interfaces should stay small (see next slide)
             \item \tc<2>{PP}{Classes should fulfil the single responsibility principle}
             \item \tc<3>{PP}{One level of abstraction per function}
         \end{itemize}
@@ -758,6 +773,8 @@
                     int getMajorVersionNumber();
                     int getMinorVersionNumber();
                     int getBuildNumber();
+
+                  // [...]
                 };
             \end{lstlisting}
         \end{varblock}
@@ -908,6 +925,8 @@
 %===================================================================================================%
 \section{Testing your code}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\AlertFrame{I have a full \textasciitilde2h seminar on this topic}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Software testing}{Test code is just as important as production code}
     \begin{columns}[c]
         \begin{column}{0.5\textwidth}
@@ -937,7 +956,6 @@
             \end{uncoverenv}
         \end{column}
     \end{columns}
-
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The \PQ{wrong} mental approach to testing}
@@ -1004,7 +1022,7 @@
     \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}[fragile]{Unit tests}{The deeper level of testing}
+\begin{frame}[fragile]{Unit tests}{The deepest level of testing}
     \begin{overlayarea}{\textwidth}{0.8\textheight}
         \begin{varblock}{alert}[0.8\textwidth]{}
             \alert{Write tests for (every) unit of source code in the code base}
@@ -1090,7 +1108,6 @@
                  {\URL*{https://www.boost.org/doc/libs/1_67_0/libs/test/doc/html/index.html}{Boost.Test} \PP{$\leftarrow$ Check me out!}};
         \end{tikzpicture}
     \end{uncoverenv}
-    \FrameRemark<1>{See the \emph{Clean testing} talk for more information about what a unit should be.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{What should I test and how?}
@@ -1132,7 +1149,7 @@
 %===================================================================================================%
 \section{General good practices}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}[fragile]{\PQ{D}on't \PQ{R}epeat \PQ{Y}ourself}
+\begin{frame}[fragile]{Don't Repeat Yourself $\;\to\;$ The DRY principle}
     \vspace{1mm}
     \begin{overlayarea}{\textwidth}{0.8\textheight}
         \begin{itemize}
@@ -1228,22 +1245,21 @@
     \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}[fragile]{\PQ{K}eep \PQ{I}t \PQ{S}imple, \PQ{S}tupid}
-    \vspace{-3mm}
+\begin{frame}[fragile]{Keep It Simple, Stupid $\;\to\;$ The KISS principle}
     \begin{overlayarea}{\textwidth}{\textheight}
-        \begin{quoteblock}{Avoid complexity!}[A. Einstein]
+        \begin{varblock}{quote}[0.8\textwidth]{Avoid complexity!}[A. Einstein]<only@1>
             Everything should be done as simple as possible, but not simpler.
-        \end{quoteblock}
+        \end{varblock}
         \begin{onlyenv}<1>
             \begin{itemize}
                 \item If you have a solution, ask yourself if there is an easier one
                 \item Complexity reduces readability and maintainability
                 \item \alert{Use libraries!}
-                \item Do not feel cool because you did something hard in a tricky way.\\ \PP{Feel cool when you did the same in a trivial-to-understand way!}
+                \item Do not feel cool because you did something hard in a tricky way.\\
+                      \PP{Feel cool when you did the same in a trivial-to-understand way!}
                 \item If you really need something complicated (do you!?), then be sure everybody understands!
             \end{itemize}
         \end{onlyenv}
-        \vspace{-5mm}
         \begin{varblock}{block example}[0.86\textwidth]{Simple example}<only@2-4>
             \begin{onlyenv}<2>
                 \begin{lstlisting}[style=MyCpp]
@@ -1372,25 +1388,34 @@
     \end{itemize}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}{The pathfinder rule}
-    \vspace{-5mm}
+\begin{frame}{The boy scout rule}
+    \vspace{0mm}
     \begin{columns}[c]
-        \begin{column}{0.4\textwidth}
+        \hfill
+        \begin{column}{0.46\textwidth}
+            \vspace{-\medskipamount}
             \begin{varblock}{}[\columnwidth]{}
                 \color{PB}Leave the campground cleaner than you found it
+            \end{varblock}
+            \vspace{-1mm}
+            \begin{varblock}{example}[\columnwidth]{}
+                \color{PS}Always check in the code cleaner than you checked it out
             \end{varblock}
         \end{column}
         \begin{column}{0.45\textwidth}
             \includegraphics[width=0.9\textwidth]{Firecamp.jpg}
         \end{column}
     \end{columns}
-    \vspace{6mm}
+    \vspace{3mm}
     \begin{itemize}
         \item To clean an existing code base takes time and requires effort
         \item Aim for tiny but continuous progress
-        \item Applying the pathfinder rule is a way to pay back technical debt
+        \item Applying the boy scout rule is a way to pay back technical debt
         \item Any IDE will help you in quickly achieving easy refactoring
     \end{itemize}
+    \begin{tikzpicture}[remember picture, overlay]
+        \path[to] ($(current page.north west)!0.52!(current page.west)+(9mm,0)$) edge[out=180, in=180] ++(0,-18.5mm);
+    \end{tikzpicture}
 \end{frame}
 %===================================================================================================%
 
