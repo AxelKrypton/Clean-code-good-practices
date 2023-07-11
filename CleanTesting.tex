@@ -65,6 +65,8 @@
     \setbeamersize{text margin left=5mm,text margin right=5mm}
 }
 
+%\pgfkeys{/beamer/overlayarea/show frame}
+
 %===============================================================%
 \title{Clean testing}
 \subtitle{Good practices in general coding}
@@ -85,32 +87,29 @@
 %===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
+            {\includegraphics[width=10mm]{CC-BY}};
+        \node[anchor=south, font=\small, text=BGLIGHT]
+            (Axel) at (license.north)
+            {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
+    \end{tikzpicture}
 \end{frame}
-\begin{comment}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[plain,noframenumbering]{Prelude}
-    \begin{equation*}
-        \text{The slides will be available on the web}\,
-        \left\{
-        \begin{aligned}
-            &\text{\URL[PB]{https://th.physik.uni-frankfurt.de/~strongmatter/\#Seminars}{CRC-TR211}} \\
-            &\text{\URL[PP]{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}} \\
-        \end{aligned}
-        \right.
-    \end{equation*}
-    \vspace{-3mm}
+    \vspace{-5mm}
     \begin{varblock}{block example}[0.8\textwidth]{Leave me a feedback}
         Was the talk clear, useful, inspiring?\\
-        Any general comment? $\quad$
+        Any general comment?\\
+        Drop me an email! $\;\to\;$
         \tc{PP}{\href{mailto:sciarra@th.physik.uni-frankfurt.de}{{\small\Letter}$\;$Alessandro}}
     \end{varblock}
     \vspace{1mm}
-    \PrepareURLsymbol[PT]
     \begin{varblock}{block alerted}[0.9\textwidth]{Disclaimer}
         Slides are quite full of text for later reading. \\
-        Most example to fit on a slide are oversimplified.\\
-        Tests shown before BDD/TDD sections are probably bad.\\[1mm]
-        $\Rightarrow\,$ \textbf{Let's discuss!}
+        Most example are oversimplified to fit on a slide.\\
+        Tests shown before BDD/TDD sections are probably bad.\\[3mm]
+        \textbf{\large Let's discuss!}
     \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -122,7 +121,6 @@
     \end{minipage}
 \end{frame}
 %===================================================================================================%
-
 
 %===================================================================================================%
 \section{A short recap about clean code}
@@ -225,7 +223,7 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Uncle Bob's magic button}
-    \begin{varblock}{quote}[1.02\textwidth]{Fearless competence}
+    \begin{varblock}{quote}[1.02\textwidth]{Fearless competence}<2->
         Are you afraid to touch the code?
         Are you afraid to improve the code?
         Do you have that little echo in your  ear saying -- Ah, if it ain't broken, don't fix it?
@@ -243,7 +241,7 @@
         \end{tikzpicture}
     \end{center}
     \vspace{-3mm}
-    \begin{varblock}{quote}[0.95\textwidth]{}[Robert C. Martin]
+    \begin{varblock}{quote}[0.95\textwidth]{}[Robert C. Martin]<2->
         Tests! What if I had a button, a little button I could push on my keyboard and some lights would blink and science-fiction sounds would come out of my laptop for a few minutes and then a little green light would light up and that green light told me that the system worked.
         \alert{And I believed it.}
     \end{varblock}
@@ -336,6 +334,8 @@
                 \URL{https://www.youtube.com/watch?v=_OHE33s7EKw}{~CppCon2020 -- Back to Basics: Unit Tests}
                 \item[]
                 \URL{https://www.youtube.com/watch?v=EZ05e7EMOLM}{~TDD, Where Did It All Go Wrong}
+                \item[]
+                \URL{https://www.youtube.com/watch?v=a6oP24CSdUg}{~TDD for those who don't need it}
                 \item[] \ldots
             \end{itemize}
         \end{column}
@@ -373,9 +373,13 @@
                 \pyramidLayer{B}{1.5}{4}{orange!80!yellow}{Integration};
                 \pyramidLayer{C}{1.5}{3}{PS}{System};
                 \pyramidLayer{D}{1.5}{2}{PP}{Acceptance};
-                \draw[to] (O) -- ++(0,6) node[right, anchor=north west] {Execution time};
+                \draw[to] (O) -- ++(0,6) node[right, anchor=north west] {
+                    \begin{tabular}{@{}l}
+                        Development cost\\
+                        Execution time\\
+                    \end{tabular}
+                };
                 \draw[to] (O) -- ++(330:6) node[right] {Number of tests};
-
             \end{tikzpicture}
         }
     \end{center}
@@ -403,6 +407,44 @@
         \end{center}
     \end{overlayarea}
     \FrameRemark{I already mentioned this in the \textsl{Clean code} talk.}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{And once integration tests pass?}
+    \vspace{-2mm}
+    \begin{varblock*}{quote}[0.86\textwidth]{System testing}[Wikipedia]
+        System testing tests a completely integrated system to verify that the system meets its requirements.
+    \end{varblock*}
+    \vspace{-3mm}
+    \begin{varblock*}{quote}[0.86\textwidth]{Acceptance testing}[Standard Glossary of Terms used in Software Testing]
+        Formal testing with respect to user needs, requirements, and business processes conducted to determine whether a system satisfies the acceptance criteria and to enable the user, customers or other authorized entity to determine whether to accept the system.\\[-2mm]
+    \end{varblock*}
+    \vspace{-3mm}
+    \begin{varblock}{example}[\textwidth]{In smaller projects}
+        You might not need all categories, but, if you drop any, do it consciously!
+    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{A technique for system/acceptance tests}
+    \begin{varblock*}{quote}[0.86\textwidth]{Functional tests}[Wikipedia]
+        They tend to answer the question of ``can the user do this'' or ``does this particular feature work''.
+    \end{varblock*}
+    \begin{center}
+        \begin{tikzpicture}[thick, node distance=15mm]
+            \node[cylinder, cylinder uses custom fill, cylinder end fill=PP!50,
+                  cylinder body fill=PP!25, aspect=0.5, draw=PB, minimum height=15mm,
+                  minimum width=12mm] (SW) {Software};
+            \begin{scope}[every node/.style={rectangle, rounded corners}]
+                \node[left = of SW,  draw=PS, fill=PS!20, yshift=+8mm] (IN) {Given input};
+                \node[right = of SW, draw=PT, fill=PT!20, yshift=-8mm] (OUT) {Given output};
+            \end{scope}
+            \path[to, thin] (IN) edge[out=0, in=180] (SW);
+            \path[to, thin] ($(SW.before top)!0.5!(SW.after top)$) edge[out=0, in=180] (OUT);
+        \end{tikzpicture}
+    \end{center}
+    \begin{itemize}
+        \item Consider to implement these tests in an external script!
+        \item \alert{This is a good starting point to work with legacy code without tests!}
+    \end{itemize}
 \end{frame}
 %===================================================================================================%
 
@@ -445,89 +487,96 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{A small interlude: Unit test frameworks for C++}{Essential for self-validation and automation!}
-    \begin{overlayarea}{\textwidth}{0.7\textheight}
-        \begin{enumerate}[<+->]
-            \item Boost Test Library\hfill
+    \vspace{2mm}
+    \begin{overlayarea}{\textwidth}{0.8\textheight}
+        \begin{enumerate}[<only@+->]
+            \setlength{\itemindent}{3mm}
+            \item \tikzmark{Boost} Boost Test Library\hfill
                   \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/index.html}{Documentation}}
-                  \begin{varblock}{example}[0.9\textwidth]{}<only@1>
-                      \begin{lstlisting}[style=MyCpp]
-                          #define BOOST_TEST_MODULE My Test
-                          #include |+<boost/test/included/unit_test.hpp>+|
-
-                          BOOST_AUTO_TEST_CASE(first_test)
-                          {
-                              int i = 1;
-                              BOOST_TEST(i);
-                              BOOST_TEST(i == 2);
-                          }
-                      \end{lstlisting}
-                      \begin{lstlisting}[style=MyBash]
-                          |+Running 1 test case...
-                          test_file.cpp(8): error: in "first_test": check i == 2 has failed [1 != 2]
-
-                          *** 1 failure is detected in the test module "My Test"+|
-                      \end{lstlisting}
-                  \end{varblock}
-            \item GoogleTest\hfill
+            \item \tikzmark{Google} GoogleTest\hfill
                   \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://google.github.io/googletest/}{User's guide}}
-                  \begin{varblock}{example}[0.9\textwidth]{}<only@2>
-                      \begin{lstlisting}[style=MyCpp]
-                          #include |+<gtest/gtest.h>+|
-                          #include |+"src/factorial.h"+|
-
-                          TEST(FactorialTest, HandlesZeroInput) {
-                              EXPECT_EQ(factorial(0), 1);
-                          }
-
-                          TEST(FactorialTest, HandlesPositiveInput) {
-                              EXPECT_EQ(factorial(1), 1);
-                          }
-
-                          int main(int argc, char **argv) {
-                              ::testing::InitGoogleTest(&argc, argv);
-                              return RUN_ALL_TESTS();
-                          }
-                      \end{lstlisting}
-                  \end{varblock}
-            \item Vir's Unit Test Framework\hfill
+            \item \tikzmark{Vir} Vir's Unit Test Framework\hfill
                   \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://github.com/mattkretz/virtest}{GitHub repository}}
-                  \begin{varblock}{example}[0.9\textwidth]{}<only@3>
-                      \begin{lstlisting}[style=MyCpp]
-                          #include |+<vir/test.h>+|
-
-                          TEST(test_name) {
-                              int test = 3;
-                              COMPARE(test, 2) << "more " << "details";
-                              //COMPARE(test, 2).on_failure("more ", "details");
-                          }
-                      \end{lstlisting}
-                      \begin{lstlisting}[style=MyBash]
-                          @|\tikzmark{corner}|@|+FAIL:  at tests/testfile.cpp:5 (0x40451f):
-                          FAIL:  test (3) == 2 (2) -> false more details
-                          FAIL:  test_name
-
-                          Testing done. 0 tests passed. 1 tests failed.+|
-                      \end{lstlisting}
-                  \end{varblock}
-            \item {\small ...and so many mores!}\hfill
+            \item[] {\small ...and so many mores!}\hfill
                   \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks\#C++}{List on Wikipedia}}
         \end{enumerate}
+        \begin{varblock}{example}[0.9\textwidth]{}<only@1>
+            \begin{lstlisting}[style=MyCpp]
+                #define BOOST_TEST_MODULE My Test
+                #include |+<boost/test/included/unit_test.hpp>+|
+
+                BOOST_AUTO_TEST_CASE(first_test)
+                {
+                    int i = 1;
+                    BOOST_TEST(i);
+                    BOOST_TEST(i == 2);
+                }
+            \end{lstlisting}
+            \begin{lstlisting}[style=MyBash]
+                |+Running 1 test case...
+                test_file.cpp(8): error: in "first_test": check i == 2 has failed [1 != 2]
+
+                *** 1 failure is detected in the test module "My Test"+|
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{example}[0.9\textwidth]{}<only@2>
+            \begin{lstlisting}[style=MyCpp]
+                #include |+<gtest/gtest.h>+|
+                #include |+"src/factorial.h"+|
+
+                TEST(FactorialTest, HandlesZeroInput) {
+                    EXPECT_EQ(factorial(0), 1);
+                }
+
+                TEST(FactorialTest, HandlesPositiveInput) {
+                    EXPECT_EQ(factorial(1), 1);
+                }
+
+                int main(int argc, char **argv) {
+                    ::testing::InitGoogleTest(&argc, argv);
+                    return RUN_ALL_TESTS();
+                }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{example}[0.9\textwidth]{}<only@3>
+            \begin{lstlisting}[style=MyCpp]
+                #include |+<vir/test.h>+|
+
+                TEST(test_name) {
+                    int test = 3;
+                    COMPARE(test, 2) << "more " << "details";
+                    //COMPARE(test, 2).on_failure("more ", "details");
+                }
+            \end{lstlisting}
+            \begin{lstlisting}[style=MyBash]
+                @|\tikzmark{corner}|@|+FAIL:  at tests/testfile.cpp:5 (0x40451f):
+                FAIL:  test (3) == 2 (2) -> false more details
+                FAIL:  test_name
+
+                Testing done. 0 tests passed. 1 tests failed.+|
+            \end{lstlisting}
+        \end{varblock}
         \vspace{1mm}
         \begin{varblock*}{alert}[0.8\textwidth]{Not all have the same weight and functionality}<only@4>
             Pick your favourite depending on your needs and project:
             \vspace{2mm}
             \begin{enumerate}
                 \small
-                \item Natural choice if you already depend on Boost
-                \item More complex but also more powerful
-                \item Very simple and lightweight
+                \item \tikzmark{BoostInfo} Natural choice if you already depend on Boost
+                \item \tikzmark{GoogleInfo} More complex but also more powerful
+                \item \tikzmark{VirInfo} Very simple and lightweight
             \end{enumerate}
         \end{varblock*}
         \begin{tikzpicture}[remember picture, overlay]
             \draw[thick, visible on=<3>] ($(corner)-(0.335\textwidth,0.13)$) -- ++(-0.12,0) -- ++(0,-0.68) -- ++(0.12,0);
+            \begin{scope}[visible on=<4>]
+                \draw[thin, to] ($(Boost)-(0.68,0)$)  -- ++(-0.45,0) |- ($(BoostInfo)-(0.45\textwidth,0.13)$);
+                \draw[thin, to] ($(Google)-(0.68,0)$) -- ++(-0.30,0) |- ($(GoogleInfo)-(0.45\textwidth,0.13)$);
+                \draw[thin, to] ($(Vir)-(0.68,0)$)    -- ++(-0.15,0) |- ($(VirInfo)-(0.45\textwidth,0.13)$);
+            \end{scope}
         \end{tikzpicture}
     \end{overlayarea}
-    \FrameRemark{If you use a different language, you can find at the Wikipedia link lists for most programming languages.}
+    \FrameRemark<4>{If you use a different language, you can find at the Wikipedia link lists for most programming languages.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Having tests is not enough, you must trust them!}{Few words about tests correctness}
@@ -665,18 +714,23 @@
             This will pretty much naturally emerge when doing TDD
         \end{center}
     \end{uncoverenv}
+    \FrameRemark<1>{I already mentioned this in the \textsl{Clean code} talk.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The hidden value of tests}{Few words about tests as API usage examples}
-    \begin{center}
-        \small
-        Of course, a meme, do not take it seriously, but...\\
-        \bigskip
-        \includegraphics[width=0.7\textwidth]{Documentation_meme}\\
-        \bigskip
-        ...good tests should show how to use your code!
-    \end{center}
-    \FrameRemark{In this sense, it should be avoided to use implementation details in tests (cf. white box testing downsides).}
+    \begin{overlayarea}{\textwidth}{0.68\textheight}
+        \begin{center}
+            \small
+            Of course, a meme, do not take it seriously, but...\\
+            \vspace{3mm}
+            \begin{uncoverenv}<2>
+                \includegraphics[width=0.7\textwidth]{Documentation_meme}\\
+                \vspace{3mm}
+                ...good tests should show how to use your code!
+            \end{uncoverenv}
+        \end{center}
+        \FrameRemark<2>{In this sense, it should be avoided to use implementation details in tests (cf. white box testing downsides).}
+    \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Tests resilience: Google advice}
@@ -770,9 +824,49 @@
     \end{onlyenv}
     \FrameRemark{This list and all GoogleTest examples are taken from Titus Winters' and Hyrum Wright's talk at CppCon2015.}
 \end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{A slide about precision}
+    \begin{onlyenv}<1>
+        \begin{center}
+            \includegraphics[width=0.7\textwidth]{Precision_meme}
+        \end{center}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{itemize}
+            \item We all know that machine precision is finite!
+            \item Comparing floating point numbers has to be done carefully
+            \item If you know a reference value exactly, put in the code more than the needed digits
+                  $\;\to\pi=3.141592653589793238462643$
+            \item Be aware of possible compiler techniques, e.g.\ FMA \Remark{fused multuply-add}\\
+                  \then This could make your test fail if you require too high precision
+            \item Requiring too high precision makes tests brittle
+            \item Requiring too low precision makes tests useless
+            \item \alert{After all it is a judgement call!}
+        \end{itemize}
+    \end{onlyenv}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{Few more words about reproducibility}
+
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{Tests accuracy and reacting to failures}
+
+\end{frame}
 %===================================================================================================%
 
 
+% Mutation testing
+% Reproducibility
+% 1. Isolation -> Mocking
+% 2. Subtraction -> Measure unwanted environment effect, correct tests to compensate
+% 3. Detect and respond -> Implement functionality to detect if test can be run, if not do something
+% 4. Statistics -> E.g. no PRNG, but if needed, measure failure frequency and enforce it in code
+%   -> a failure of a test must be a failure, i.e. something to react on!
+% Accuracy -> Window with four cases Code correct/wrong VS tests pass/fail
+
+
+\begin{comment}
 %===================================================================================================%
 \section{The curse of the \textbf{unit} word}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -809,7 +903,7 @@
 \begin{frame}{It depends}
     \vspace{-3mm}
     \begin{varblock}{quote}[\textwidth]{TDD, Where Did It All Go Wrong}[Ian Cooper]
-        A couple of times we're very proud of the fact that we produced some code that went to production with almost zero defects.
+        A couple of times we were very proud of the fact that we produced some code that went to production with almost zero defects.
         [...]
         I looked at this test suite.
         One things I noticed was that \alert{we had about three times as much test code as production code}.
@@ -826,38 +920,308 @@
 
 
 %===================================================================================================%
-\section[White- and black-box testing]{The weaknesses of white- and black-box testing}
+\section[White- and black-box testing!?]{The weaknesses of white- and black-box testing}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}{White box testing}
+\AlertFrame{
+    \begin{tabular}{c}
+        I'll test a single class next in examples,\\
+        but you know what is a \textbf{unit} now!
+    \end{tabular}
+}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}[fragile]{White box testing}
+    \vspace{-3mm}
+    \begin{overlayarea}{\textwidth}{0.7\textheight}
+        \begin{itemize}
+            \item You allow yourself in using all code in your tests\\
+                  \begin{onlyenv}<1>
+                      \then even private methods and members\\
+                      \then implementation details are used to test interface
+                  \end{onlyenv}
+            \item<2-> In some languages (e.g.\ Python) easier than in others (e.g.\ C++)
+            \item<only@5-> \PS{Something to consider to start working on legacy code!}\\
+            \item<only@6> \alert{What happens when you change your implementation?}\\
+                          \then Compilation might break\\
+                          \then If not, some tests will probably fail\\
+                          \then You likely need to change your tests code\\
+                          \then For large refactoring, it might be boring/frustrating\\[3mm]
+                          \centerline{\includegraphics[width=18mm]{Thinking}}
+        \end{itemize}
+        \begin{columns}[T]
+            \begin{column}{0.45\textwidth}
+                \begin{varblock}{example}[\textwidth]{Consider this class}<only@2-3>
+                    \begin{lstlisting}[style=MyCpp]
+                        // File Cup.h
 
+                        class Cup {
+                          public:
+                            Cup();
+                            bool IsEmpty();
+                            bool Drink();
+                            bool Fill();
+                          private:
+                            bool _isEmpty = true;
+                        };
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Consider this class}<only@4>
+                    \begin{lstlisting}[style=MyCpp]
+                        // File Cup.h
+
+                        class Cup {
+                          public:
+                            Cup();
+                            bool IsEmpty();
+                            bool Drink();
+                            bool Fill();
+                          private:
+                            friend struct CupTester;
+                            bool _isEmpty = true;
+                        };
+                    \end{lstlisting}
+                \end{varblock}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@2>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+
+
+                        TEST(|=Cup::Cup=|) {
+                            Cup cup{};
+                            VERIFY(cup._isEmpty);
+                        }
+                        TEST(|=Cup::IsEmpty=|) { /*...*/ }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@3>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+                        #define private public // UB!!!
+
+                        TEST(|=Cup::Cup=|) {
+                            Cup cup{};
+                            VERIFY(cup._isEmpty);
+                        }
+                        TEST(|=Cup::IsEmpty=|) { /*...*/ }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@4>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+                        struct CupTester { /*...*/ };
+
+                        TEST(|=Cup::Cup=|) {
+                            Cup cup{};
+                            CupTester tester{cup};
+                            VERIFY(tester.isEmpty);
+                        }
+                        TEST(|=Cup::IsEmpty=|) { /*...*/ }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+                \centering\vspace{-3mm}
+                \only<2>{\alert{\scriptsize This does not compile!}}
+                \only<3>{\alert{\scriptsize This relies on undefined behaviour!!!}}
+            \end{column}
+        \end{columns}
+        \FrameRemark<2-4>{I took this example from Dave Steffen's talk at CppCon2020.}
+    \end{overlayarea}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-% - White box -> we tighten testing and production code e.g. with friends
-%   (sometimes neede -> start to test legacy code)
-% - Black box -> at some point testing a method we rely on correctness of other methods
-%    => The fragile test problem (also more in general, one failure -> many failures)
+\begin{frame}[fragile]{Black-box testing}
+    \vspace{-3mm}
+    \begin{overlayarea}{\textwidth}{0.7\textheight}
+        \begin{itemize}
+            \item What about just testing the public interface?
+        \end{itemize}
+        \vspace{-3mm}
+        \begin{columns}[T]
+            \begin{column}{0.45\textwidth}
+                \begin{varblock}{example}[\textwidth]{Consider this class}<only@1-3>
+                    \begin{lstlisting}[style=MyCpp]
+                        // File Cup.h
+
+                        class Cup {
+                          public:
+                            Cup();
+                            bool IsEmpty();
+                            bool Drink();
+                            bool Fill();
+                          private:
+                            bool _isEmpty = true;
+                        };
+                    \end{lstlisting}
+                \end{varblock}
+                \centering\vspace{-3mm}
+                \only<1>{\scriptsize Same as before}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@1>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+
+                        TEST(|=Cup::Cup=|)     { /*...*/ }
+                        TEST(|=Cup::IsEmpty=|) { /*...*/ }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@2>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+
+                        TEST(|=Cup::Cup=|) {
+                            Cup cup{};
+                            VERIFY(cup.IsEmpty);
+                        }
+                        TEST(|=Cup::IsEmpty=|) { /*...*/ }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@3>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+"vir/test.h"+|
+                        #include |+"Cup.h"+|
+
+                        TEST(|=Cup::Cup=|) {
+                            Cup cup{};
+                            VERIFY(cup.IsEmpty);
+                        }
+                        TEST(|=Cup::IsEmpty=|){
+                            Cup cup{};
+                            VERIFY(cup.IsEmpty);
+                        }
+                        TEST(|=Cup::Fill=|)    { /*...*/ }
+                        TEST(|=Cup::Drink=|)   { /*...*/ }
+                    \end{lstlisting}
+                \end{varblock}
+            \end{column}
+        \end{columns}
+        \begin{onlyenv}<3>
+            \begin{center}
+                \alert{Wait, we wrote the same code twice!}
+            \end{center}
+        \end{onlyenv}
+        \vspace{-3mm}
+        \begin{varblock}{quote}[0.8\textwidth]{The black-box conundrum}[Dave Steffen]<only@4-5>
+            Fundamentally if we only test via the public interface, we have a circular-logic problem: you have to use the interface to test the interface, so at some point you have to trust something which you haven't tested.
+        \end{varblock}
+        \begin{varblock}{alert}[0.95\textwidth]{So, what to do then?}<only@5>
+            \begin{enumerate}
+                \item Ignore the problem \Remark{Be aware: Tests are not independent, one bug triggers many failures!}
+                \item Declare one member function ``correct by inspection'' \Remark{and start from there}
+                \item Abandon black-box testing as impractical
+            \end{enumerate}
+        \end{varblock}
+    \end{overlayarea}
+\end{frame}
 %===================================================================================================%
 
-% Mutation testing
-% What is right? -> Numerical precision to be wisely chosen
-%   -> e.g. FMA could make your test fail if you require too high precision
-% Reproducibility
-% 1. Isolation -> Mocking
-% 2. Subtraction -> Measure unwanted environment effect, correct tests to compensate
-% 3. Detect and respond -> Implement functionality to detect if test can be run, if not do something
-% 4. Statistics -> E.g. no PRNG, but if needed, measure failure frequency and enforce it in code
-%   -> a failure of a test must be a failure, i.e. something to react on!
-% Accuracy -> Window with four cases Code correct/wrong VS tests pass/fail
 
 %===================================================================================================%
-\section[BDD in its original idea]{Behaviour driven development in its original idea}
+\section{Test the behaviour, not the implementation}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%===================================================================================================%
+\begin{frame}[fragile]{Do not test methods! Test behaviour!}
+    \vspace{-5mm}
+    \begin{overlayarea}{\textwidth}{0.7\textheight}
+        \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@1>
+            \begin{lstlisting}[style=MyCpp]
+                #include |+"vir/test.h"+|
+                #include |+"Cup.h"+|
 
+                TEST(|=A new cup is empty=|)           { /*...*/ }
+                TEST(|=An empty cup can be filled=|)   { /*...*/ }
+                TEST(|=A filled cup is full=|)         { /*...*/ }
+                TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@2>
+            \begin{lstlisting}[style=MyCpp]
+                #include |+"vir/test.h"+|
+                #include |+"Cup.h"+|
+
+                TEST(|=A new cup is empty=|){
+                    Cup cup{};
+                    VERIFY(cup.IsEmpty);
+                }
+                TEST(|=An empty cup can be filled=|)   { /*...*/ }
+                TEST(|=A filled cup is full=|)         { /*...*/ }
+                TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{itemize}
+            \item<only@1> Test names describe the unit specifications
+            \item<only@1> Suddenly, we are completely independent from implementation details
+            \item<only@1> OK, so how does test code look like?
+            \item<only@2> \alert{Wait!! This is exactly the same code that wasn't OK few minutes ago!?}\\
+                     \then How is it that changing the name makes it fine?\\
+                     \then How should this solve the black-box conundrum?
+        \end{itemize}
+        \begin{onlyenv}<3->
+            \vspace{-3mm}
+            \begin{varblock}{example}[0.6\textwidth]{The bottom line}
+                We are now testing consistency of interface, not correctness of implementation!
+            \end{varblock}
+            \begin{varblock}{alert}[0.6\textwidth]{Let's say it once more:}<4->
+                \textbf{We are now testing consistency of interface, not correctness of implementation!}
+            \end{varblock}
+            \begin{varblock}{}[0.9\textwidth]{It is not a philosophical statement!}<5>
+                \PB{A bug that cannot be observed under any conditions is not a bug!}
+            \end{varblock}
+        \end{onlyenv}
+    \end{overlayarea}
+%    \begin{varblock}{}[\textwidth]{Dan North's original idea}
+%        https://dannorth.net/introducing-bdd/
+%    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}[fragile]{\uncover<2>{As testing behaviour passes, the code is correct!}}
+    \begin{varblock}{example}[0.9\textwidth]{Is this code correct or wrong?}
+        \begin{lstlisting}[style=MyCpp]
+            // File Cup.h
+
+            class Cup {
+              public:
+                Cup()          { _isEmpty = false; }
+                bool IsEmpty() { return !_isEmpty; }
+                bool Drink()   { /*...*/ }
+                bool Fill()    { /*...*/ }
+              private:
+                bool _isEmpty = false;
+            };
+        \end{lstlisting}
+    \end{varblock}
+    \vspace{-2mm}
+    \begin{varblock}{example}[0.9\textwidth]{}<2>
+        \begin{lstlisting}[style=MyCpp]
+            #include |+"vir/test.h"+|
+            #include |+"Cup.h"+|
+            TEST(|=A new cup is empty=|)           { /*...*/ }
+            TEST(|=An empty cup can be filled=|)   { /*...*/ }
+            TEST(|=A filled cup is full=|)         { /*...*/ }
+            TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+        \end{lstlisting}
+    \end{varblock}
+\end{frame}
+%===================================================================================================%
+\end{comment}
 
 %===================================================================================================%
 \section{Test driven development as discipline}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+% Behaviour driven development in its original idea
 %===================================================================================================%
 
 
@@ -865,6 +1229,5 @@
 \section{What to do, now?}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %===================================================================================================%
-\end{comment}
 
 \end{document}
