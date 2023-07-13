@@ -1,9 +1,9 @@
 \documentclass[14pt,usenames,dvipsnames,svgnames]{beamer}
 \usepackage[english]{babel}
 \usepackage[misc]{ifsym}
-\usepackage{mathspec,mathabx,multicol,listings,comment,fontawesome,pgfornament,comment}
+\usepackage{mathspec,mathabx,multicol,listings,comment,fontawesome,pgfornament,comment,pifont}
 \usepackage{TeXnicalities}
-\usetikzlibrary{shapes}
+\usetikzlibrary{shapes,matrix}
 
 \setsansfont{Yanone Kaffeesatz}[
     UprightFont     = *-Regular ,
@@ -15,7 +15,7 @@
     SmallCapsFont   = *-Thin
 ]
 
-\graphicspath{{Figures/}}
+\graphicspath{{Figures/},{Figures/Emoji/}}
 \input{ListingsSetup}
 \input{PieTikz}
 
@@ -40,7 +40,7 @@
 \makeatletter
     \newlength{\textsize}
     \setlength{\textsize}{\f@size pt}
-    \newcommand{\emoji}[1]{\;\raisebox{-0.15\textsize}{\includegraphics[height=\f@size pt]{#1}}}
+    \newcommand{\emoji}[2][\;]{#1\raisebox{-0.15\textsize}{\includegraphics[height=\f@size pt]{#2}}}
 \makeatother
 \newcommand{\then}{\raisebox{2pt}{$\;\drsh\;$}}
 \newcommand{\Then}[1]{%
@@ -48,7 +48,8 @@
     \pgfmathparse{\linewidth-\pgfmathresult}
     \then\parbox[t]{\pgfmathresult pt}{\raggedright #1}
 }
-
+\newcommand{\yes}[1][ForestGreen]{\textcolor{#1}{\ding{51}}}
+\newcommand{\no}[1][OrangeRed]{\textcolor{#1}{\ding{55}}}
 
 \makeatletter
 \patchcmd{\beamer@sectionintoc}
@@ -122,6 +123,7 @@
 \end{frame}
 %===================================================================================================%
 
+
 %===================================================================================================%
 \section{A short recap about clean code}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -154,7 +156,9 @@
 
 
 %===================================================================================================%
-\section{Why (automated) testing?}
+\section{Why automated testing?}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\AlertFrame{A mind-blowing changing point!}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Lots of software should rather work...}{In our society you cannot spend 60 seconds without interacting with a software system}
     \vspace{-2mm}
@@ -165,23 +169,31 @@
         \item Aren't you upset when an app on your phone stalls or crashes?!
     \end{enumerate}
     \vspace{2mm}
-    \begin{varblock}{example}[\textwidth]{An remarkable story about manual testing}<uncover@2->
-        I have been using an own manually tested ``agenda-script'' to track my working time \alert{\textbf{for months}} and then one day it suddenly crashed.\\
-        Where was the problem?
-        \uncover<3>{\PB{I assumed \textbf{every} day has 24 hours\ldots\emoji{Innocent}}}
-    \end{varblock}
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{Airplane}
+        \includegraphics[width=0.3\textwidth]{Lift}
+        \includegraphics[width=0.3\textwidth]{Dentist_tools}
+    \end{center}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \newcommand{\FermatExample}[4][3]{$#2^#1+#3^#1\neq#4^#1$}
 \begin{frame}{The unfortunate tendency in many cases}
     \vspace{-3mm}
     \begin{itemize}
-        \item \alert{It gives reasonable results, it works!} \emoji{Scream}
+        \item \alert{It gives reasonable results $\;\Rightarrow\;$ it works!} \emoji{Scream}
         \item Manual (and possibly not systematic) testing is unfortunately still common practice in our community!
         \item Even if done in a systematic way, you will never run your tests enough!
     \end{itemize}
     \begin{overlayarea}{\textwidth}{0.4\textheight}
-        \begin{onlyenv}<1>
+        \begin{onlyenv}<1-2>
+            \vspace{3mm}
+            \begin{varblock}{example}[\textwidth]{An remarkable story about manual testing}
+                I have been using an own manually tested ``agenda-script'' to track my working time \alert{\textbf{for months}} and then one day it suddenly crashed.\\
+                Where was the problem?
+                \uncover<2>{\PB{I assumed \textbf{every} day has 24 hours\ldots\emoji{Innocent}}}
+            \end{varblock}
+        \end{onlyenv}
+        \begin{onlyenv}<3>
             \begin{varblock}{quote}[0.7\textwidth]{Theorem:}
                 Prove that, with $n,x,y,z\in \mathbb{N}>0$ and $n>2$, the equation $x^n+y^n =z^n$ has no solutions.
             \end{varblock}
@@ -190,7 +202,8 @@
                 \FermatExample{2}{3}{4}\; and\;\FermatExample[4]{1}{5}{6}\; and\;\FermatExample[5]{4}{2}{5}
             \end{varblock}
         \end{onlyenv}
-        \begin{onlyenv}<2>
+        \begin{onlyenv}<4>
+            \vspace{3mm}
             \begin{varblock}{alert}[0.7\textwidth]{Now, software testing is not like mathematics...}
                 \large ...but would you accept a physics fact \textbf{without rigorous evidence}?
             \end{varblock}
@@ -701,9 +714,9 @@
                         EXPECT_EQ(120, Factorial(5));
                         EXPECT_EQ(1, Factorial(0));
                         EXPECT_EQ(479001600, Factorial(12));
-                        EXPECT_EQ(std::numeric_limits::max<int>() , Factorial(13));
+                        EXPECT_EQ(std::numeric_limits<int>::max() , Factorial(13));
                         EXPECT_EQ(1, Factorial(0));
-                        EXPECT_EQ(std::numeric_limits::max<int>() , Factorial(-10));
+                        EXPECT_EQ(std::numeric_limits<int>::max() , Factorial(-10));
                     }
                 \end{lstlisting}
             \end{onlyenv}
@@ -825,7 +838,8 @@
     \FrameRemark{This list and all GoogleTest examples are taken from Titus Winters' and Hyrum Wright's talk at CppCon2015.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-\begin{frame}{A slide about precision}
+\begin{frame}{A slide about tests precision}
+    \vspace{-3mm}
     \begin{onlyenv}<1>
         \begin{center}
             \includegraphics[width=0.7\textwidth]{Precision_meme}
@@ -836,8 +850,8 @@
             \item We all know that machine precision is finite!
             \item Comparing floating point numbers has to be done carefully
             \item If you know a reference value exactly, put in the code more than the needed digits
-                  $\;\to\pi=3.141592653589793238462643$
-            \item Be aware of possible compiler techniques, e.g.\ FMA \Remark{fused multuply-add}\\
+                  \PB{$\;\to\pi=3.141592653589793238462643$}
+            \item Be aware of possible compiler techniques, e.g.\ FMA \Remark{fused multiply-add}\\
                   \then This could make your test fail if you require too high precision
             \item Requiring too high precision makes tests brittle
             \item Requiring too low precision makes tests useless
@@ -847,26 +861,73 @@
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Few more words about reproducibility}
-
+    \vspace{-5mm}
+    \begin{varblock}{example}[0.96\textwidth]{How can I make my tests reproducible?}
+        \begin{enumerate}
+            \item Isolate them from non-deterministic aspects \Remark{e.g.\ network, database, random numbers}\\
+                  \then This is not always possible!
+            \item Measure unwanted environment effect and subtract it in tests
+            \item Detect if test can be run in the present environment\\
+                  \then If not, either fail or handle situation
+            \item \alert{Handle intrinsic noise by statistics}\\
+                  \Then{E.g.\ if random numbers are needed, measure the failure frequency and re-run the test a number of times large enough to consider a failure as such!}
+        \end{enumerate}
+    \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Tests accuracy and reacting to failures}
-
+    \begin{center}
+        \begin{tikzpicture}
+            \coordinate (O) at (0,0);
+            \begin{scope}[every node/.style={inner ysep=6mm, inner xsep=3mm, font=\huge, minimum width=46mm},
+                          every label/.style={label distance=-3mm, font=\small, anchor=south, inner sep=0mm}]
+                \node[anchor=south east, fill=PP!30, visible on=<2->] (M11) at (O) {
+                    \begin{tabular}{c}
+                        \emoji[]{Top}\\[-5mm]
+                        {\normalsize Ship it!}\\[-9pt]
+                    \end{tabular}
+                };
+                \node[anchor=south west, fill=ALERT, visible on=<3->] (M12) at (O) {
+                    \begin{tabular}{c}
+                        \emoji[]{Warning}\\[-5mm]
+                        {\normalsize Add tests, fix code!}\\[-9pt]
+                    \end{tabular}
+                };
+                \node[anchor=north east, fill=PT!10, visible on=<4->] (M21) at (O) {
+                    \begin{tabular}{c}
+                        \emoji[]{Sweat_smile}\\[-5mm]
+                        {\normalsize False alarm, fix tests!}\\[-9pt]
+                    \end{tabular}
+                };
+                \node[anchor=north west, fill=PS!30, visible on=<5->] (M22) at (O) {
+                    \begin{tabular}{c}
+                        \emoji[]{Tada}\\[-5mm]
+                        {\normalsize Success story!}\\[-9pt]
+                    \end{tabular}
+                };
+            \end{scope}
+            \begin{scope}
+                \draw (M11.south west) -- (M11.north west) -- (M12.north east) -- (M22.south east) --
+                      (M21.south west) -- (M21.north west) -- (M12.south east)
+                      (M11.north east) -- (M21.south east);
+            \end{scope}
+            \begin{scope}[node distance=2mm, every node/.style={inner sep=1mm, font=\Large}]
+                \node[above = of M11] (CCyes) {\yes};
+                \node[above = of M12] (CCno)  {\no};
+                \node[left  = of M11, yshift=+3mm] (TPyes) {\yes};
+                \node[left  = of M21, yshift=-3mm] (TPno)  {\no};
+            \end{scope}
+            \begin{scope}[every node/.style={font=\small}]
+                \node at ($(CCyes.east)!0.5!(CCno.west)+(0,0)$) {Is code correct?};
+                \node[rotate=90] at ($(TPyes.south)!0.5!(TPno.north)-(0,0)$) {Did tests pass?};
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+    \FrameRemark{Tests accuracy means how much tests outcome matches code correctness.}
 \end{frame}
 %===================================================================================================%
 
 
-% Mutation testing
-% Reproducibility
-% 1. Isolation -> Mocking
-% 2. Subtraction -> Measure unwanted environment effect, correct tests to compensate
-% 3. Detect and respond -> Implement functionality to detect if test can be run, if not do something
-% 4. Statistics -> E.g. no PRNG, but if needed, measure failure frequency and enforce it in code
-%   -> a failure of a test must be a failure, i.e. something to react on!
-% Accuracy -> Window with four cases Code correct/wrong VS tests pass/fail
-
-
-\begin{comment}
 %===================================================================================================%
 \section{The curse of the \textbf{unit} word}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -902,7 +963,7 @@
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{It depends}
     \vspace{-3mm}
-    \begin{varblock}{quote}[\textwidth]{TDD, Where Did It All Go Wrong}[Ian Cooper]
+    \begin{varblock}{quote}[0.8\textwidth]{TDD, Where Did It All Go Wrong}[Ian Cooper]
         A couple of times we were very proud of the fact that we produced some code that went to production with almost zero defects.
         [...]
         I looked at this test suite.
@@ -925,7 +986,7 @@
 \AlertFrame{
     \begin{tabular}{c}
         I'll test a single class next in examples,\\
-        but you know what is a \textbf{unit} now!
+        but you now know what a \textbf{unit} is!
     \end{tabular}
 }
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -1061,8 +1122,8 @@
                         };
                     \end{lstlisting}
                 \end{varblock}
-                \centering\vspace{-3mm}
-                \only<1>{\scriptsize Same as before}
+                \centering%\vspace{-3mm}
+                \only<1-3>{\scriptsize Source code same as before}
             \end{column}
             \begin{column}{0.48\textwidth}
                 \begin{varblock}{example}[\textwidth]{Test file}<only@1>
@@ -1134,7 +1195,7 @@
 \section{Test the behaviour, not the implementation}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Do not test methods! Test behaviour!}
-    \vspace{-5mm}
+    \vspace{-11mm}
     \begin{overlayarea}{\textwidth}{0.7\textheight}
         \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@1>
             \begin{lstlisting}[style=MyCpp]
@@ -1147,7 +1208,7 @@
                 TEST(|=Drinking epties a filled cup=|) { /*...*/ }
             \end{lstlisting}
         \end{varblock}
-        \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@2>
+        \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@2-3>
             \begin{lstlisting}[style=MyCpp]
                 #include |+"vir/test.h"+|
                 #include |+"Cup.h"+|
@@ -1161,30 +1222,27 @@
                 TEST(|=Drinking epties a filled cup=|) { /*...*/ }
             \end{lstlisting}
         \end{varblock}
+        \only<1-3>{\vspace{3mm}}
         \begin{itemize}
             \item<only@1> Test names describe the unit specifications
             \item<only@1> Suddenly, we are completely independent from implementation details
             \item<only@1> OK, so how does test code look like?
-            \item<only@2> \alert{Wait!! This is exactly the same code that wasn't OK few minutes ago!?}\\
+            \item<only@3> \alert{Wait!! This is exactly the same code that wasn't OK few minutes ago!?}\\
                      \then How is it that changing the name makes it fine?\\
                      \then How should this solve the black-box conundrum?
         \end{itemize}
-        \begin{onlyenv}<3->
-            \vspace{-3mm}
+        \begin{onlyenv}<4->
             \begin{varblock}{example}[0.6\textwidth]{The bottom line}
                 We are now testing consistency of interface, not correctness of implementation!
             \end{varblock}
-            \begin{varblock}{alert}[0.6\textwidth]{Let's say it once more:}<4->
+            \begin{varblock}{alert}[0.6\textwidth]{Let's say it once more:}<5->
                 \textbf{We are now testing consistency of interface, not correctness of implementation!}
             \end{varblock}
-            \begin{varblock}{}[0.9\textwidth]{It is not a philosophical statement!}<5>
+            \begin{varblock}{}[0.9\textwidth]{It is not a philosophical statement!}<6>
                 \PB{A bug that cannot be observed under any conditions is not a bug!}
             \end{varblock}
         \end{onlyenv}
     \end{overlayarea}
-%    \begin{varblock}{}[\textwidth]{Dan North's original idea}
-%        https://dannorth.net/introducing-bdd/
-%    \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{\uncover<2>{As testing behaviour passes, the code is correct!}}
@@ -1216,18 +1274,385 @@
     \end{varblock}
 \end{frame}
 %===================================================================================================%
-\end{comment}
+
+
 
 %===================================================================================================%
 \section{Test driven development as discipline}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-% Behaviour driven development in its original idea
-%===================================================================================================%
-
-
-%===================================================================================================%
-\section{What to do, now?}
+\AlertFrame{It is a discipline}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{It is a discipline}
+    \begin{itemize}
+        \item \alert{Do not bring it immediately into your daily work}
+        \item Learn it in small exercise projects:
+              \begin{itemize}
+                  \item Implement a \;\PS{\texttt{Stack}}\; object
+                  \item Implement a file parser
+                  \item Write a 1D integration tool with few different algorithms
+                  \item Simulate the 2D Ising model with a Monte Carlo algorithm
+                  \item Implement a simple game (e.g.\ hangman, minesweeper)
+                  \item{} [...]
+              \end{itemize}
+        \item \PB{Convince yourself about it}
+        \item Get a feeling and choose ``your way''
+    \end{itemize}
+    \begin{varblock}{example}[0.75\textwidth]{Eventually}
+        \bfseries Get rid of the there-is-no-time-to-write-tests attitude!\\
+    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{The purist original approach}
+    \begin{varblock}{quote}[\textwidth]{Test driven development main rules}[Robert C. Martin]
+        \begin{enumerate}[<+(1)->]
+            \item You're not allowed to write any production code until you have first written a test that fails because the production code doesn't exist.
+            \item You're not allowed to write more of a test than is sufficient to fail.
+                  And not compiling is failing.
+            \item You're not allowed to write any more production code than is sufficient to pass the currently failing test.
+        \end{enumerate}
+    \end{varblock}
+    \begin{varblock}{example}[0.6\textwidth]{}<5>
+        How would it be a world in which everything always worked one minute ago?
+    \end{varblock}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}[fragile]{Writing the factorial in TDD}
+    \vspace{-2mm}
+    \begin{overlayarea}{\textwidth}{0.82\textheight}
+        \begin{columns}[T]
+            \begin{column}{0.49\textwidth}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@1-2>
+                    \begin{lstlisting}[style=MyCpp]
+                        // Empty file
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@3>
+                    \begin{lstlisting}[style=MyCpp]
+                        void factorial(int N){}
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@4-5>
+                    \begin{lstlisting}[style=MyCpp]
+                        void factorial(int N)
+                        {
+                          throw std::logical_error();
+                        }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@6-7>
+                    \begin{lstlisting}[style=MyCpp]
+                        int factorial(int N)
+                        {
+                          if(N<0)
+                            throw std::logical_error();
+                          else
+                            return 1;
+                        }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@8-9>
+                    \begin{lstlisting}[style=MyCpp]
+                        int factorial(int N)
+                        {
+                          if(N<0)
+                            throw std::logical_error();
+                          else if(N==1)
+                            return 1;
+                          else
+                            return N * factorial(N-1);
+                        }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@10-12>
+                    \begin{lstlisting}[style=MyCpp]
+                        int factorial(int N)
+                        {
+                          if(N<0)
+                            throw std::logical_error();
+                          else if(N<2)
+                            return 1;
+                          else
+                            return N * factorial(N-1);
+                        }
+                    \end{lstlisting}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Source file}<only@13>
+                    \begin{lstlisting}[style=MyCpp]
+                        #include |+<limits>+|
+
+                        int factorial(int N)
+                        {
+                          if(N<0)
+                            throw std::logical_error();
+                          else if(N<2)
+                            return 1;
+                          else if(N>13)
+                            return INT_MAX;
+                          else
+                            return N * factorial(N-1);
+                        }
+                    \end{lstlisting}
+                \end{varblock}
+            \end{column}
+            \hspace*{-4mm}
+            \begin{column}{0.48\textwidth}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@1>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-9mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                         TEST(Nothing){}
+                    \end{lstlisting}
+                    {\scriptsize\PS{It passes}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@2-4>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                          factorial(-17);
+                        }
+                    \end{lstlisting}
+                    {
+                        \scriptsize
+                        \only<2>{\alert{It doesn't compile}}
+                        \only<3>{\alert{It fails}}
+                        \only<4>{\PS{It passes}}
+                    }
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@5-6>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                          factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\alt<5>{\alert{It fails}}{\PS{It passes}}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@7-8>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                          factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                          COMPARE(120, factorial(5));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\alt<7>{\alert{It fails}}{\PS{It passes}}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@9-10>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                          factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                          COMPARE(120, factorial(5));
+                          COMPARE(0, factorial(1));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\alt<9>{\alert{It fails}}{\PS{It passes}}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@11>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                          factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                          COMPARE(120, factorial(5));
+                          COMPARE(0, factorial(1));
+                          COMPARE(479001600,
+                                  factorial(12));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\PS{It still passes}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@12>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+                        #include |+<limits>+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                            factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                          COMPARE(120, factorial(5));
+                          COMPARE(0, factorial(1));
+                          COMPARE(479001600,
+                                  factorial(12));
+                          COMPARE(INT_MAX,
+                                  factorial(13));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\alert{It fails}}
+                \end{varblock}
+                \begin{varblock}{example}[\textwidth]{Test file}<only@13>
+                    \begin{lstlisting}[style=MyCpp, belowskip=-10mm]
+                        #include |+<vir/test.h>+|
+                        #include |+"factorial.h"+|
+
+                        TEST_CATCH(Negative_factorial,
+                                   std::logical_error)
+                        {
+                            factorial(-17);
+                        }
+                        TEST(FactorialTest) {
+                          COMPARE(1, factorial(1));
+                          COMPARE(120, factorial(5));
+                          COMPARE(0, factorial(1));
+                          COMPARE(479001600,
+                                  factorial(12));
+                          COMPARE(INT_MAX,
+                                  factorial(13));
+                        }
+                    \end{lstlisting}
+                    {\scriptsize\PS{It passes}}
+                \end{varblock}
+            \end{column}
+        \end{columns}
+        \FrameRemark<12->{In the code \;\CPP|INT_MAX|\; has been used for space reasons. The C++11 limit \;\CPP|std::numeric_limits<int>::max()|\; should be preferred, though.}
+    \end{overlayarea}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{How strict should you be with yourself?}
+    \begin{center}
+        \begin{tikzpicture}
+            \node[label={[anchor=north, font=\Large, label distance=-5mm]90:{Find your way!}}] (fig)
+                {\includegraphics[width=0.7\textwidth]{Find_your_way}};
+        \end{tikzpicture}
+        \par \alert{The more edits you do at once, the more dangerous it is!}
+    \end{center}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{The Red -- Green -- Refactor approach}
+    \begin{onlyenv}<1>
+        \vspace{-5mm}
+        \begin{varblock}{quote}[0.85\textwidth]{What Kent Beck proposed}[Ian Cooper]
+            \normalsize
+            \begin{description}
+                \item[\alert{\textbf{Red:}}] Write a little test that doesn't work, and perhaps doesn't even compile at first.
+                \item[\PS{\textbf{Green:}}] Make the test work quickly, committing whatever sins necessary in the process.
+                \item[\PB{\textbf{Refactor:}}] Eliminate all of the duplication created in merely getting the test to work.
+            \end{description}
+        \end{varblock}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{center}
+            \includegraphics[width=0.9\textwidth]{TDD_Cycle}
+        \end{center}
+    \end{onlyenv}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{Behaviour driven development in its original idea}
+    \begin{overlayarea}{\textwidth}{0.82\textheight}
+        \begin{itemize}
+            \item Dan North's \URL[PB]{https://dannorth.net/introducing-bdd/}{original idea} stemmed from TDD
+                  \begin{itemize}[<only@1>]
+                    \item Test method names should be sentences
+                    \item An expressive test name is helpful when a test fails
+                    \item Determine the next most important behaviour
+                    \item Requirements are behaviour, too
+                    \item BDD provides a ``ubiquitous language'' for analysis
+                  \end{itemize}
+            \item<2-> Use cases become stories and each test implements an acceptance criterion for the story
+        \end{itemize}
+        \vspace{-2mm}
+        \setlength{\labelsep}{\fontdimen2\font} % https://tex.stackexchange.com/a/266760/128737
+        \begin{varblock}{example}[0.68\textwidth]{Example of use case as a story}<only@2>
+            \textbf{Title:} Customer withdraws cash\\
+            \begin{description}[~~so that]
+                \setlength{\itemsep}{0pt}
+                \item[\alert{As a}] customer,\\
+                \item[\alert{I want}] to withdraw cash from an ATM,\\
+                \item[\alert{so that}] I don't have to wait in line at the bank.
+            \end{description}
+        \end{varblock}
+        \begin{varblock}{example}[0.8\textwidth]{Example of story acceptance criterion}<only@3>
+            \textbf{Scenario:} Account is overdrawn past the overdraft limit\\
+            \begin{description}
+                \setlength{\itemsep}{0pt}
+                \item[\alert{Given}] the account is overdrawn\\
+                \item[\alert{And}] the card is valid\\
+                \item[\alert{When}] the customer requests cash\\
+                \item[\alert{Then}] ensure a rejection message is displayed\\
+                \item[\alert{And}] ensure cash is not dispensed\\
+                \item[\alert{And}] ensure the card is returned
+            \end{description}
+        \end{varblock}
+    \end{overlayarea}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{TDD and BDD}
+    \begin{center}
+        \includegraphics[width=0.62\textwidth]{Different_POV}\\[3mm]
+        After all they are disciplines to deal with the same idea!
+    \end{center}
+\end{frame}
+%===================================================================================================%
+
+
+%===================================================================================================%
+\section{Take-home message}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{Wrapping up the advice}
+    \begin{onlyenv}<1>
+        \begin{enumerate}
+            \item «I do not have time to write tests» does not make any sense!
+            \item Writing tests is an inseparable part of the code development
+            \item Tests are the only way to change code still ensuring its correctness
+            \item Test the behaviour, not the implementation
+            \item Depending on the size of the project, you can go one or another way
+            \item If you do not want to strictly do TDD, still envision your tests and API usage before implementing any code
+            \item Now you are aware of how writing code should be done!
+            \item Testing (and hence writing) code is doing science
+        \end{enumerate}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{center}
+            \includegraphics[width=0.68\textwidth]{Wow}\\[3mm]
+            If this is not your reaction write now, it will be soon!
+        \end{center}
+    \end{onlyenv}
+    \begin{onlyenv}<3>
+        \begin{center}
+            \includegraphics[width=0.479\textwidth]{Old_new_way}
+            \includegraphics[width=0.48\textwidth]{Time_for_change}\\[5mm]
+            \Large\PS{Thanks for listening!}\\[2mm]
+            \PB{Questions? Feedback?}
+        \end{center}
+    \end{onlyenv}
+\end{frame}
 %===================================================================================================%
 
 \end{document}
