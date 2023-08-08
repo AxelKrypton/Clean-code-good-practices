@@ -73,7 +73,7 @@
 \subtitle{Good practices in general coding}
 \author{Alessandro Sciarra}
 \institute{Z02~--~Software Development Center}
-\date{XX August 2023}
+\date{09 August 2023}
 \titlegraphic{\includegraphics[width=25mm]{LogoCRC}}
 \titlepagelogo{\includegraphics[width=25mm]{LogoGoethe}}
 %===============================================================%
@@ -109,7 +109,7 @@
     \begin{varblock}{block alerted}[0.9\textwidth]{Disclaimer}
         Slides are quite full of text for later reading. \\
         Most example are oversimplified to fit on a slide.\\
-        Tests shown before BDD/TDD sections are probably bad.\\[3mm]
+        Tests shown before the TDD section are probably bad.\\[3mm]
         \textbf{\large Let's discuss!}
     \end{varblock}
 \end{frame}
@@ -156,7 +156,7 @@
 
 
 %===================================================================================================%
-\section{Why automated testing?}
+\section[Why testing?]{Why (automated) testing?}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \AlertFrame{A mind-blowing changing point!}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -173,6 +173,13 @@
         \includegraphics[width=0.3\textwidth]{Airplane}
         \includegraphics[width=0.3\textwidth]{Lift}
         \includegraphics[width=0.3\textwidth]{Dentist_tools}
+    \end{center}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{An old, simple fact}{Taken from Casper Jones, «Program quality and programmer productivity» -- 1977}
+    \vspace{-2mm}
+    \begin{center}
+        \includegraphics[width=0.82\textheight]{Bugs_per_line}
     \end{center}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -505,13 +512,20 @@
         \begin{enumerate}[<only@+->]
             \setlength{\itemindent}{3mm}
             \item \tikzmark{Boost} Boost Test Library\hfill
-                  \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/index.html}{Documentation}}
-            \item \tikzmark{Google} GoogleTest\hfill
-                  \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://google.github.io/googletest/}{User's guide}}
+                  \parbox{0.4\textwidth}{\footnotesize\URL[PB]{https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/index.html}{Documentation}}
+            \item \tikzmark{Google} GoogleTest \uncover<+->{\;\textcolor{bg!60!normal text.fg}{or}\; Catch2}\hfill
+                  \parbox{0.4\textwidth}{
+                      \footnotesize
+                      \URL[PB]{https://google.github.io/googletest/}{User's guide} \uncover<.->{or
+                      \URL[PB]{https://github.com/catchorg/Catch2}{GitHub project}}
+                  }
             \item \tikzmark{Vir} Vir's Unit Test Framework\hfill
-                  \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://github.com/mattkretz/virtest}{GitHub repository}}
+                  \parbox{0.4\textwidth}{\footnotesize\URL[PB]{https://github.com/mattkretz/virtest}{GitHub repository}}
             \item[] {\small ...and so many mores!}\hfill
-                  \parbox{0.3\textwidth}{\footnotesize\URL[PB]{https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks\#C++}{List on Wikipedia}}
+                  \parbox{0.4\textwidth}{
+                      \footnotesize
+                      \URL[PB]{https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks\#C++}{List on Wikipedia}
+                  }
         \end{enumerate}
         \begin{varblock}{example}[0.9\textwidth]{}<only@1>
             \begin{lstlisting}[style=MyCpp]
@@ -553,6 +567,23 @@
         \end{varblock}
         \begin{varblock}{example}[0.9\textwidth]{}<only@3>
             \begin{lstlisting}[style=MyCpp]
+                #include |+<catch2/catch_test_macros.hpp>+|
+
+                unsigned int factorial(unsigned int number)
+                {
+                    return number > 1 ? factorial(number - 1) * number : 1;
+                }
+
+                TEST_CASE("Factorials are computed", "[factorial]") {
+                    REQUIRE(factorial(0)  == 1);
+                    REQUIRE(factorial(1)  == 1);
+                    REQUIRE(factorial(3)  == 6);
+                    REQUIRE(factorial(10) == 3628800);
+                }
+            \end{lstlisting}
+        \end{varblock}
+        \begin{varblock}{example}[0.9\textwidth]{}<only@4>
+            \begin{lstlisting}[style=MyCpp]
                 #include |+<vir/test.h>+|
 
                 TEST(test_name) {
@@ -570,7 +601,7 @@
             \end{lstlisting}
         \end{varblock}
         \vspace{1mm}
-        \begin{varblock*}{alert}[0.8\textwidth]{Not all have the same weight and functionality}<only@4>
+        \begin{varblock*}{alert}[0.8\textwidth]{Not all have the same weight and functionality}<only@5>
             Pick your favourite depending on your needs and project:
             \vspace{2mm}
             \begin{enumerate}
@@ -581,15 +612,17 @@
             \end{enumerate}
         \end{varblock*}
         \begin{tikzpicture}[remember picture, overlay]
-            \draw[thick, visible on=<3>] ($(corner)-(0.335\textwidth,0.13)$) -- ++(-0.12,0) -- ++(0,-0.68) -- ++(0.12,0);
-            \begin{scope}[visible on=<4>]
+            % virtest output symbol
+            \draw[thick, visible on=<4>] ($(corner)-(0.335\textwidth,0.13)$) -- ++(-0.12,0) -- ++(0,-0.68) -- ++(0.12,0);
+            % connecting lines of enumerate environments
+            \begin{scope}[visible on=<5>]
                 \draw[thin, to] ($(Boost)-(0.68,0)$)  -- ++(-0.45,0) |- ($(BoostInfo)-(0.45\textwidth,0.13)$);
                 \draw[thin, to] ($(Google)-(0.68,0)$) -- ++(-0.30,0) |- ($(GoogleInfo)-(0.45\textwidth,0.13)$);
                 \draw[thin, to] ($(Vir)-(0.68,0)$)    -- ++(-0.15,0) |- ($(VirInfo)-(0.45\textwidth,0.13)$);
             \end{scope}
         \end{tikzpicture}
     \end{overlayarea}
-    \FrameRemark<4>{If you use a different language, you can find at the Wikipedia link lists for most programming languages.}
+    \FrameRemark<5>{If you use a different language, you can find at the Wikipedia link lists for most programming languages.}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[fragile]{Having tests is not enough, you must trust them!}{Few words about tests correctness}
@@ -734,7 +767,7 @@
     \begin{overlayarea}{\textwidth}{0.68\textheight}
         \begin{center}
             \small
-            Of course, a meme, do not take it seriously, but...\\
+            Of course, a meme, do not take it (too) seriously, but...\\
             \vspace{3mm}
             \begin{uncoverenv}<2>
                 \includegraphics[width=0.7\textwidth]{Documentation_meme}\\
@@ -1021,7 +1054,7 @@
                             bool Drink();
                             bool Fill();
                           private:
-                            bool _isEmpty = true;
+                            bool isEmpty_ = true;
                         };
                     \end{lstlisting}
                 \end{varblock}
@@ -1037,7 +1070,7 @@
                             bool Fill();
                           private:
                             friend struct CupTester;
-                            bool _isEmpty = true;
+                            bool isEmpty_ = true;
                         };
                     \end{lstlisting}
                 \end{varblock}
@@ -1051,7 +1084,7 @@
 
                         TEST(|=Cup::Cup=|) {
                             Cup cup{};
-                            VERIFY(cup._isEmpty);
+                            VERIFY(cup.isEmpty_);
                         }
                         TEST(|=Cup::IsEmpty=|) { /*...*/ }
                         TEST(|=Cup::Fill=|)    { /*...*/ }
@@ -1066,7 +1099,7 @@
 
                         TEST(|=Cup::Cup=|) {
                             Cup cup{};
-                            VERIFY(cup._isEmpty);
+                            VERIFY(cup.isEmpty_);
                         }
                         TEST(|=Cup::IsEmpty=|) { /*...*/ }
                         TEST(|=Cup::Fill=|)    { /*...*/ }
@@ -1082,7 +1115,7 @@
                         TEST(|=Cup::Cup=|) {
                             Cup cup{};
                             CupTester tester{cup};
-                            VERIFY(tester.isEmpty);
+                            VERIFY(tester.isEmpty_);
                         }
                         TEST(|=Cup::IsEmpty=|) { /*...*/ }
                         TEST(|=Cup::Fill=|)    { /*...*/ }
@@ -1118,7 +1151,7 @@
                             bool Drink();
                             bool Fill();
                           private:
-                            bool _isEmpty = true;
+                            bool isEmpty_ = true;
                         };
                     \end{lstlisting}
                 \end{varblock}
@@ -1144,7 +1177,7 @@
 
                         TEST(|=Cup::Cup=|) {
                             Cup cup{};
-                            VERIFY(cup.IsEmpty);
+                            VERIFY(cup.IsEmpty());
                         }
                         TEST(|=Cup::IsEmpty=|) { /*...*/ }
                         TEST(|=Cup::Fill=|)    { /*...*/ }
@@ -1158,11 +1191,11 @@
 
                         TEST(|=Cup::Cup=|) {
                             Cup cup{};
-                            VERIFY(cup.IsEmpty);
+                            VERIFY(cup.IsEmpty());
                         }
                         TEST(|=Cup::IsEmpty=|){
                             Cup cup{};
-                            VERIFY(cup.IsEmpty);
+                            VERIFY(cup.IsEmpty());
                         }
                         TEST(|=Cup::Fill=|)    { /*...*/ }
                         TEST(|=Cup::Drink=|)   { /*...*/ }
@@ -1202,10 +1235,10 @@
                 #include |+"vir/test.h"+|
                 #include |+"Cup.h"+|
 
-                TEST(|=A new cup is empty=|)           { /*...*/ }
-                TEST(|=An empty cup can be filled=|)   { /*...*/ }
-                TEST(|=A filled cup is full=|)         { /*...*/ }
-                TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+                TEST(|=A new cup is empty=|)            { /*...*/ }
+                TEST(|=An empty cup can be filled=|)    { /*...*/ }
+                TEST(|=A filled cup is full=|)          { /*...*/ }
+                TEST(|=Drinking empties a filled cup=|) { /*...*/ }
             \end{lstlisting}
         \end{varblock}
         \begin{varblock}{example}[0.75\textwidth]{Back to our cup example:}<only@2-3>
@@ -1215,11 +1248,11 @@
 
                 TEST(|=A new cup is empty=|){
                     Cup cup{};
-                    VERIFY(cup.IsEmpty);
+                    VERIFY(cup.IsEmpty());
                 }
-                TEST(|=An empty cup can be filled=|)   { /*...*/ }
-                TEST(|=A filled cup is full=|)         { /*...*/ }
-                TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+                TEST(|=An empty cup can be filled=|)    { /*...*/ }
+                TEST(|=A filled cup is full=|)          { /*...*/ }
+                TEST(|=Drinking empties a filled cup=|) { /*...*/ }
             \end{lstlisting}
         \end{varblock}
         \only<1-3>{\vspace{3mm}}
@@ -1252,12 +1285,12 @@
 
             class Cup {
               public:
-                Cup()          { _isEmpty = false; }
-                bool IsEmpty() { return !_isEmpty; }
+                Cup()          { isEmpty_ = false; }
+                bool IsEmpty() { return !isEmpty_; }
                 bool Drink()   { /*...*/ }
                 bool Fill()    { /*...*/ }
               private:
-                bool _isEmpty = false;
+                bool isEmpty_ = false;
             };
         \end{lstlisting}
     \end{varblock}
@@ -1266,10 +1299,10 @@
         \begin{lstlisting}[style=MyCpp]
             #include |+"vir/test.h"+|
             #include |+"Cup.h"+|
-            TEST(|=A new cup is empty=|)           { /*...*/ }
-            TEST(|=An empty cup can be filled=|)   { /*...*/ }
-            TEST(|=A filled cup is full=|)         { /*...*/ }
-            TEST(|=Drinking epties a filled cup=|) { /*...*/ }
+            TEST(|=A new cup is empty=|)            { /*...*/ }
+            TEST(|=An empty cup can be filled=|)    { /*...*/ }
+            TEST(|=A filled cup is full=|)          { /*...*/ }
+            TEST(|=Drinking empties a filled cup=|) { /*...*/ }
         \end{lstlisting}
     \end{varblock}
 \end{frame}
@@ -1297,8 +1330,8 @@
         \item \PB{Convince yourself about it}
         \item Get a feeling and choose ``your way''
     \end{itemize}
-    \begin{varblock}{example}[0.75\textwidth]{Eventually}
-        \bfseries Get rid of the there-is-no-time-to-write-tests attitude!\\
+    \begin{varblock}{example}[0.78\textwidth]{Finally}
+        \bfseries Get rid of the ``there-is-no-time-to-write-tests'' attitude!\\
     \end{varblock}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -1327,23 +1360,25 @@
                     \end{lstlisting}
                 \end{varblock}
                 \begin{varblock}{example}[\textwidth]{Source file}<only@3>
-                    \begin{lstlisting}[style=MyCpp]
-                        void factorial(int N){}
+                    \begin{lstlisting}[style=MyCpp, belowskip=-9mm]
+                        void factorial(int n){}
                     \end{lstlisting}
+                    {\scriptsize\alert{Notice the function signature!}}
                 \end{varblock}
                 \begin{varblock}{example}[\textwidth]{Source file}<only@4-5>
-                    \begin{lstlisting}[style=MyCpp]
-                        void factorial(int N)
+                    \begin{lstlisting}[style=MyCpp, belowskip=-7mm]
+                        void factorial(int n)
                         {
                           throw std::logical_error();
                         }
                     \end{lstlisting}
+                    \only<4>{\scriptsize\alert{Still no need to return anything!}}
                 \end{varblock}
                 \begin{varblock}{example}[\textwidth]{Source file}<only@6-7>
                     \begin{lstlisting}[style=MyCpp]
-                        int factorial(int N)
+                        int factorial(int n)
                         {
-                          if(N<0)
+                          if(n<0)
                             throw std::logical_error();
                           else
                             return 1;
@@ -1352,27 +1387,27 @@
                 \end{varblock}
                 \begin{varblock}{example}[\textwidth]{Source file}<only@8-9>
                     \begin{lstlisting}[style=MyCpp]
-                        int factorial(int N)
+                        int factorial(int n)
                         {
-                          if(N<0)
+                          if(n<0)
                             throw std::logical_error();
-                          else if(N==1)
+                          else if(n==1)
                             return 1;
                           else
-                            return N * factorial(N-1);
+                            return n * factorial(n-1);
                         }
                     \end{lstlisting}
                 \end{varblock}
                 \begin{varblock}{example}[\textwidth]{Source file}<only@10-12>
                     \begin{lstlisting}[style=MyCpp]
-                        int factorial(int N)
+                        int factorial(int n)
                         {
-                          if(N<0)
+                          if(n<0)
                             throw std::logical_error();
-                          else if(N<2)
+                          else if(n<2)
                             return 1;
                           else
-                            return N * factorial(N-1);
+                            return n * factorial(n-1);
                         }
                     \end{lstlisting}
                 \end{varblock}
@@ -1380,16 +1415,16 @@
                     \begin{lstlisting}[style=MyCpp]
                         #include |+<limits>+|
 
-                        int factorial(int N)
+                        int factorial(int n)
                         {
-                          if(N<0)
+                          if(n<0)
                             throw std::logical_error();
-                          else if(N<2)
+                          else if(n<2)
                             return 1;
-                          else if(N>13)
+                          else if(n>13)
                             return INT_MAX;
                           else
-                            return N * factorial(N-1);
+                            return n * factorial(n-1);
                         }
                     \end{lstlisting}
                 \end{varblock}
@@ -1469,7 +1504,7 @@
                         TEST(FactorialTest) {
                           COMPARE(1, factorial(1));
                           COMPARE(120, factorial(5));
-                          COMPARE(0, factorial(1));
+                          COMPARE(1, factorial(0));
                         }
                     \end{lstlisting}
                     {\scriptsize\alt<9>{\alert{It fails}}{\PS{It passes}}}
@@ -1487,7 +1522,7 @@
                         TEST(FactorialTest) {
                           COMPARE(1, factorial(1));
                           COMPARE(120, factorial(5));
-                          COMPARE(0, factorial(1));
+                          COMPARE(1, factorial(0));
                           COMPARE(479001600,
                                   factorial(12));
                         }
@@ -1508,7 +1543,7 @@
                         TEST(FactorialTest) {
                           COMPARE(1, factorial(1));
                           COMPARE(120, factorial(5));
-                          COMPARE(0, factorial(1));
+                          COMPARE(1, factorial(0));
                           COMPARE(479001600,
                                   factorial(12));
                           COMPARE(INT_MAX,
@@ -1530,7 +1565,7 @@
                         TEST(FactorialTest) {
                           COMPARE(1, factorial(1));
                           COMPARE(120, factorial(5));
-                          COMPARE(0, factorial(1));
+                          COMPARE(1, factorial(0));
                           COMPARE(479001600,
                                   factorial(12));
                           COMPARE(INT_MAX,
@@ -1555,9 +1590,14 @@
     \end{center}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{Disciplines feel slow, they are not slow}
+    \begin{center}
+        \includegraphics[height=0.8\textheight]{TDD_not_slow}
+    \end{center}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{The Red -- Green -- Refactor approach}
     \begin{onlyenv}<1>
-        \vspace{-5mm}
         \begin{varblock}{quote}[0.85\textwidth]{What Kent Beck proposed}[Ian Cooper]
             \normalsize
             \begin{description}
@@ -1565,6 +1605,11 @@
                 \item[\PS{\textbf{Green:}}] Make the test work quickly, committing whatever sins necessary in the process.
                 \item[\PB{\textbf{Refactor:}}] Eliminate all of the duplication created in merely getting the test to work.
             \end{description}
+        \end{varblock}
+        \vspace{-2mm}
+        \begin{varblock}{quote}[0.92\textwidth]{About testing the implementation}[Ian Cooper]
+            Sometimes it is useful to probe the implementation details because they are difficult to understand.
+            You can do that, but \textbf{delete the tests afterwards!}\\[-3mm]~
         \end{varblock}
     \end{onlyenv}
     \begin{onlyenv}<2>
@@ -1626,25 +1671,27 @@
 \section{Take-home message}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}{Wrapping up the advice}
+    \vspace{-3mm}
+    \begin{enumerate}[<+->]
+        \item \textcolor{bg!80!normal text.fg}{«I do not have time to write tests»} \textbf{does not make any sense!}
+        \item \PP{Writing tests is an inseparable part of the code development}
+        \item \alert{Tests are the only way to change code still ensuring its correctness}
+        \item \PS{Test the behaviour, not the implementation}
+        \item Depending on the size of the project, you can go one or another way
+        \item If you do not want to strictly do TDD, still envision your tests and API usage before implementing any code
+        \item Now you are aware of how writing code should be done!
+        \item Testing (and hence writing) code is doing science
+    \end{enumerate}
+\end{frame}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\begin{frame}{And now?}
     \begin{onlyenv}<1>
-        \begin{enumerate}
-            \item «I do not have time to write tests» does not make any sense!
-            \item Writing tests is an inseparable part of the code development
-            \item Tests are the only way to change code still ensuring its correctness
-            \item Test the behaviour, not the implementation
-            \item Depending on the size of the project, you can go one or another way
-            \item If you do not want to strictly do TDD, still envision your tests and API usage before implementing any code
-            \item Now you are aware of how writing code should be done!
-            \item Testing (and hence writing) code is doing science
-        \end{enumerate}
-    \end{onlyenv}
-    \begin{onlyenv}<2>
         \begin{center}
             \includegraphics[width=0.68\textwidth]{Wow}\\[3mm]
-            If this is not your reaction write now, it will be soon!
+            If this is not your reaction right now, it will be soon!
         \end{center}
     \end{onlyenv}
-    \begin{onlyenv}<3>
+    \begin{onlyenv}<2>
         \begin{center}
             \includegraphics[width=0.479\textwidth]{Old_new_way}
             \includegraphics[width=0.48\textwidth]{Time_for_change}\\[5mm]
