@@ -7,16 +7,16 @@ In the [releases page](https://github.com/AxelKrypton/Clean-code-good-practices/
 
 ## Clean code
 
-:blue_book: [View](CleanCode.pdf) &emsp;
-:floppy_disk: [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanTesting.pdf)
+📘 [View](CleanCode.pdf) &emsp;
+💾 [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanTesting.pdf)
 
 This presentation has been prepared based on the «Clean code» book by Robert C. Martin, also known as uncle Bob.
 It was originally given in a C++ user group meeting and, therefore, the code examples are in C++, but the abstract ideas are totally independent from the programming language.
 
 ## Clean testing
 
-:green_book: [View](CleanTesting.pdf) &emsp;
-:floppy_disk: [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanTesting.pdf)
+📗 [View](CleanTesting.pdf) &emsp;
+💾 [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanTesting.pdf)
 
 After having presented the Clean Code part I got asked for a follow up about testing.
 I gave it a try, collecting several ideas around in books and on the web.
