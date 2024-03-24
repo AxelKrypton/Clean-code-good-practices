@@ -8,7 +8,7 @@ In the [releases page](https://github.com/AxelKrypton/Clean-code-good-practices/
 ## Clean code
 
 📘 [View](CleanCode.pdf) &emsp;
-💾 [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanTesting.pdf)
+💾 [Download](https://github.com/AxelKrypton/Clean-code-good-practices/raw/main/CleanCode.pdf)
 
 This presentation has been prepared based on the «Clean code» book by Robert C. Martin, also known as uncle Bob.
 It was originally given in a C++ user group meeting and, therefore, the code examples are in C++, but the abstract ideas are totally independent from the programming language.
