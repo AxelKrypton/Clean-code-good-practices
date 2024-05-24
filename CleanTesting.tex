@@ -2,7 +2,7 @@
 \usepackage[english]{babel}
 \usepackage[misc]{ifsym}
 \usepackage{mathspec,mathabx,multicol,listings,comment,fontawesome,pgfornament,comment,pifont}
-\usepackage{TeXnicalities}
+\usepackage[compat=0.2]{TeXnicalities}
 \usetikzlibrary{shapes,matrix}
 
 \setsansfont{Yanone Kaffeesatz}[
@@ -42,12 +42,6 @@
     \setlength{\textsize}{\f@size pt}
     \newcommand{\emoji}[2][\;]{#1\raisebox{-0.15\textsize}{\includegraphics[height=\f@size pt]{#2}}}
 \makeatother
-\newcommand{\then}{\raisebox{2pt}{$\;\drsh\;$}}
-\newcommand{\Then}[1]{%
-    \pgfmathwidth{"\then"}
-    \pgfmathparse{\linewidth-\pgfmathresult}
-    \then\parbox[t]{\pgfmathresult pt}{\raggedright #1}
-}
 \newcommand{\yes}[1][ForestGreen]{\textcolor{#1}{\ding{51}}}
 \newcommand{\no}[1][OrangeRed]{\textcolor{#1}{\ding{55}}}
 
@@ -68,14 +62,26 @@
 
 %\pgfkeys{/beamer/overlayarea/show frame}
 
+%Append code to put more information on titlepage
+\appto\titlepage{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south, inner ysep=4pt] at ($(current page.south)!0.58!(current page.south east)+(0mm,1mm)$)
+        {\includegraphics[width=13mm]{LogoPUNCH}};
+        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
+        {\includegraphics[width=10mm]{CC-BY}};
+        \node[anchor=south, font=\small, text=BGLIGHT]
+        (Axel) at (license.north) {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
+    \end{tikzpicture}
+}
+
 %===============================================================%
 \title{Clean testing}
 \subtitle{Good practices in general coding}
 \author{Alessandro Sciarra}
-\institute{Z02~--~Software Development Center}
-\date{09 August 2023}
-\titlegraphic{\includegraphics[width=25mm]{LogoCRC}}
-\titlepagelogo{\includegraphics[width=25mm]{LogoGoethe}}
+\institute{Z02~--~Software Development Center\\[1mm] {PUNCH Young Academy -- PUNCH4NFDI}}
+\date{24 May 2024}
+\titlegraphic{\includegraphics[width=16mm]{LogoCRC}}
+\titlepagelogo{\includegraphics[width=26mm]{LogoGoethe}}
 %===============================================================%
 
 \AtBeginSection[] % <- Empty optional argument, do nothing for \section*
@@ -88,13 +94,6 @@
 %===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
-    \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
-            {\includegraphics[width=10mm]{CC-BY}};
-        \node[anchor=south, font=\small, text=BGLIGHT]
-            (Axel) at (license.north)
-            {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
-    \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[plain,noframenumbering]{Prelude}
@@ -1421,7 +1420,7 @@
                             throw std::logical_error();
                           else if(n<2)
                             return 1;
-                          else if(n>13)
+                          else if(n>=13)
                             return INT_MAX;
                           else
                             return n * factorial(n-1);

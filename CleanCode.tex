@@ -2,7 +2,7 @@
 \usepackage[english]{babel}
 \usepackage[misc]{ifsym}
 \usepackage{fontspec,mathabx,multicol,listings,comment,fontawesome,pgfornament}
-\usepackage{TeXnicalities}
+\usepackage[compat=0.2]{TeXnicalities}
 \usetikzlibrary{shapes}
 
 \setsansfont{Yanone Kaffeesatz}[
@@ -53,12 +53,24 @@
     \setbeamersize{text margin left=5mm,text margin right=5mm}
 }
 
+%Append code to put more information on titlepage
+\appto\titlepage{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south, inner ysep=4pt] at ($(current page.south)!0.58!(current page.south east)+(0mm,1mm)$)
+        {\includegraphics[width=13mm]{LogoPUNCH}};
+        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
+        {\includegraphics[width=10mm]{CC-BY}};
+        \node[anchor=south, font=\small, text=BGLIGHT]
+        (Axel) at (license.north) {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
+    \end{tikzpicture}
+}
+
 %===============================================================%
 \title{Clean code}
 \subtitle{Good practices in general coding}
 \author{~\\[-5mm]Alessandro Sciarra}
-\institute{Z02~--~Software Development Center}
-\date{06 July 2023}
+\institute{Z02~--~Software Development Center\\[1mm] {PUNCH Young Academy -- PUNCH4NFDI}}
+\date{23-24 May 2024}
 \titlegraphic{\includegraphics[width=16mm]{LogoCRC}}
 \titlepagelogo{\includegraphics[width=26mm]{LogoGoethe}}
 %===============================================================%
@@ -74,15 +86,6 @@
 %===================================================================================================%
 \begin{frame}[plain,noframenumbering]
     \titlepage
-    \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south, inner ysep=4pt] at ($(current page.south)!0.58!(current page.south east)+(0mm,1mm)$)
-            {\includegraphics[width=13mm]{LogoPUNCH}};
-        \node[anchor=south, inner ysep=0pt] (license) at ($(current page.south)+(0mm,4mm)$)
-            {\includegraphics[width=10mm]{CC-BY}};
-        \node[anchor=south, font=\small, text=BGLIGHT]
-            (Axel) at (license.north)
-            {\href{https://github.com/AxelKrypton}{\faGithub\,AxelKrypton}};
-    \end{tikzpicture}
 \end{frame}
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{frame}[plain,noframenumbering]{Prelude}
@@ -1437,7 +1440,7 @@
     \end{itemize}
     \vspace{2mm}
     \begin{quoteblock}{Moral of the story}[R. C. Martin]
-        An old violinist got lost on his way to a performance.
+        A young violinist got lost on his way to a performance.
         He stopped an old man on the corner and asked him how to get to Carnegie Hall.
         The old man looked at the violinist and the violin tucked under his arm and said:
         \alert{\guillemotleft{}Practice, son. Practice!\guillemotright}
